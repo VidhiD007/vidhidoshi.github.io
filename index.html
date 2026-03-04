@@ -58,7 +58,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050510;font-family:
 
 /* ── TOP BAR ── */
 #topbar{
-  position:fixed;top:0;left:0;right:0;z-index:300;
+  position:fixed;top:0;left:0;right:0;z-index:500;
   display:flex;justify-content:space-between;align-items:center;
   padding:1.3rem 2rem;
   background:linear-gradient(to bottom,rgba(5,5,16,.88),transparent);
@@ -221,7 +221,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050510;font-family:
 
 /* ── ABOUT / CONTACT MODAL ── */
 #modal-overlay{
-  position:fixed;inset:0;z-index:2500;
+  position:fixed;inset:0;z-index:3000;
   pointer-events:none;
   background:rgba(2,2,12,.85);backdrop-filter:blur(18px);
   display:flex;align-items:center;justify-content:center;
@@ -235,6 +235,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050510;font-family:
   border-radius:14px;padding:2.4rem 2.6rem 2.8rem;
   scrollbar-width:thin;scrollbar-color:rgba(192,132,252,.15) transparent;
   transform:translateY(18px);transition:transform .35s cubic-bezier(.22,1,.36,1);
+  -webkit-overflow-scrolling:touch;
 }
 #modal-overlay.open #modal-box{transform:translateY(0);}
 #modal-box::-webkit-scrollbar{width:3px;}
@@ -320,7 +321,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050510;font-family:
 /* Mobile nav drawer */
 #mobile-nav{
   display:none;
-  position:fixed;top:0;left:0;right:0;z-index:450;
+  position:fixed;top:0;left:0;right:0;z-index:490;
   background:rgba(5,5,20,.97);backdrop-filter:blur(20px);
   padding:4.5rem 1.6rem 1.8rem;
   border-bottom:1px solid rgba(192,132,252,.15);
@@ -382,8 +383,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050510;font-family:
   }
   .zl-title{font-size:.88rem;}
 
-  /* ── PANEL ── */
-  #panel{width:100vw;border-left:none;}
+  /* ── PANEL slides up from bottom ── */
+  #panel{
+    width:100vw;border-left:none;
+    top:auto;bottom:0;height:88vh;
+    transform:translateY(100%);
+    border-top:1px solid rgba(255,255,255,.1);
+    border-radius:16px 16px 0 0;
+  }
+  #panel.open{transform:translateY(0);}
+  #panel-close{border-radius:16px 16px 0 0;padding:1rem 1.5rem;}
+  #panel-close::before{
+    content:'';display:block;width:40px;height:4px;
+    background:rgba(255,255,255,.18);border-radius:2px;
+    margin:0 auto .8rem;
+  }
   #panel-body{padding:1.2rem 1.4rem 2.5rem;}
   #p-name{font-size:1.15rem;}
   #p-desc{font-size:.78rem;}
@@ -1729,20 +1743,37 @@ window.addEventListener('mouseup',e=>{
 
 // Touch drag
 let touchStartX=0,touchStartY=0,lastTouchX=0,lastTouchY=0;
-window.addEventListener('touchstart',e=>{
-  const t=e.touches[0];
+// ── Mobile auto-rotate + tap vs drag ──────────────────────────
+var mobileAutoRotate=true, mobileInactivityTimer=null, touchMoved=false;
+function resetMobileAutoRotate(){
+  mobileAutoRotate=false;
+  if(mobileInactivityTimer) clearTimeout(mobileInactivityTimer);
+  mobileInactivityTimer=setTimeout(function(){ mobileAutoRotate=true; },10000);
+}
+
+window.addEventListener('touchstart',function(e){
+  if(e.target.closest('#panel')||e.target.closest('#topbar')||
+     e.target.closest('#mobile-nav')||e.target.closest('#chatbot')||
+     e.target.closest('#modal-overlay')) return;
+  var t=e.touches[0];
   App.mouse.x=(t.clientX/W())*2-1;
   App.mouse.y=-(t.clientY/H())*2+1;
   App.mouseScreen.x=t.clientX; App.mouseScreen.y=t.clientY;
   touchStartX=t.clientX; touchStartY=t.clientY;
   lastTouchX=t.clientX; lastTouchY=t.clientY;
+  touchMoved=false; isDragging=true;
+  resetMobileAutoRotate();
 },{passive:true});
 
-window.addEventListener('touchmove',e=>{
-  const t=e.touches[0];
+window.addEventListener('touchmove',function(e){
+  if(e.target.closest('#panel')||e.target.closest('#topbar')||
+     e.target.closest('#mobile-nav')||e.target.closest('#chatbot')||
+     e.target.closest('#modal-overlay')) return;
+  var t=e.touches[0];
   App.mouse.x=(t.clientX/W())*2-1;
   App.mouse.y=-(t.clientY/H())*2+1;
-  const dx=t.clientX-lastTouchX, dy=t.clientY-lastTouchY;
+  var dx=t.clientX-lastTouchX, dy=t.clientY-lastTouchY;
+  if(Math.abs(t.clientX-touchStartX)>6||Math.abs(t.clientY-touchStartY)>6) touchMoved=true;
   dragRotY+=dx*0.009; dragRotX+=dy*0.007;
   dragRotX=Math.max(-Math.PI*0.45,Math.min(Math.PI*0.45,dragRotX));
   lastTouchX=t.clientX; lastTouchY=t.clientY;
@@ -1787,18 +1818,35 @@ window.addEventListener('click',e=>{
 });
 
 // Touch support
-window.addEventListener('touchstart',e=>{
-  const t=e.touches[0];
+window.addEventListener('touchend',function(e){
+  isDragging=false;
+  if(e.target.closest('#panel')||e.target.closest('#topbar')||
+     e.target.closest('#mobile-nav')||e.target.closest('#chatbot')||
+     e.target.closest('#modal-overlay')) return;
+  if(touchMoved||App.state==='loading'||App.state==='intro') return;
+  var t=e.changedTouches[0];
   App.mouse.x=(t.clientX/W())*2-1;
   App.mouse.y=-(t.clientY/H())*2+1;
-  App.mouseScreen.x=t.clientX; App.mouseScreen.y=t.clientY;
-},{passive:true});
-window.addEventListener('touchend',e=>{
-  const t=e.changedTouches[0];
-  App.mouse.x=(t.clientX/W())*2-1;
-  App.mouse.y=-(t.clientY/H())*2+1;
-  App.mouseScreen.x=t.clientX; App.mouseScreen.y=t.clientY;
-  setTimeout(()=>window.dispatchEvent(new MouseEvent('click',{clientX:t.clientX,clientY:t.clientY,bubbles:true})),60);
+  App.raycaster.setFromCamera(App.mouse,camera);
+  // Tap on project node
+  if(App.state==='brain'||App.state==='lobe'||App.state==='panel'){
+    var vis=NODE_MESHES.filter(function(n){return n.mesh.scale.x>.2;}).map(function(n){return n.mesh;});
+    if(vis.length){
+      var nh=App.raycaster.intersectObjects(vis);
+      if(nh.length>0){App.openPanel(nh[0].object.userData.projId);return;}
+    }
+  }
+  // Tap on lobe
+  if(App.state==='brain'||App.state==='lobe'){
+    var lb=Object.values(LOBE_BUMPS);
+    var lh=App.raycaster.intersectObjects(lb);
+    if(lh.length>0){App.zoomToLobe(lh[0].object.userData.lobeKey);return;}
+    if(App.state==='lobe') App.resetBrain();
+  }
+  if(App.state==='panel'){
+    var ph=App.raycaster.intersectObjects(Object.values(LOBE_BUMPS));
+    if(ph.length===0) App.closePanel();
+  }
 },{passive:true});
 
 // ═══════════════════════════════════════════════════════════
@@ -1820,7 +1868,7 @@ function animate(){
         dragRotY+=(App.targetRotY-dragRotY)*.025;
         dragRotX+=(App.targetRotX-dragRotX)*.025;
       } else {
-        dragRotY+=.005;
+        if(mobileAutoRotate) dragRotY+=.004;
       }
     }
     App.brainRotY=dragRotY;
@@ -1989,6 +2037,7 @@ var Modal = {
   currentTab: 'about',
   open: function(tab) {
     this.switchTab(tab || 'about');
+    if(typeof closeMobileNav==='function') closeMobileNav();
     document.getElementById('modal-overlay').classList.add('open');
   },
   close: function() {
@@ -2166,7 +2215,11 @@ const Chat = {
   gotoProject: function(projId, lobeKey) {
     this.open = false;
     document.getElementById('chat-window').classList.remove('open');
-    if (App.state !== 'lobe' || App.activeLobe !== lobeKey) {
+    if(typeof closeMobileNav==='function') closeMobileNav();
+    if(window.innerWidth<=700){
+      App.activeLobe=lobeKey; App.state='lobe';
+      App.openPanel(projId);
+    } else if (App.state !== 'lobe' || App.activeLobe !== lobeKey) {
       App.zoomToLobe(lobeKey);
       setTimeout(function(){ App.openPanel(projId); }, 950);
     } else {
