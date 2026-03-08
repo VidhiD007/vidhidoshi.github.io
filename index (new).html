@@ -1,0 +1,2401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vidhi Doshi  -  Living Brain Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#050510;font-family:'Sora',sans-serif;color:#fff;}
+#c{position:fixed;inset:0;z-index:0;cursor:default;}
+
+/* ── LOADING ── */
+#loading{
+  position:fixed;inset:0;z-index:2000;
+  background:#050510;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity 1.2s ease;
+}
+#loading.fade{opacity:0;pointer-events:none;}
+.ld-orb{width:52px;height:52px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#c084fc,#7c3aed 60%,#050510);
+  animation:ldpulse 1.6s ease-in-out infinite;margin-bottom:1.4rem;
+  box-shadow:0 0 30px rgba(192,132,252,0.4);}
+@keyframes ldpulse{0%,100%{transform:scale(.85);opacity:.7;}50%{transform:scale(1.1);opacity:1;}}
+.ld-txt{font-size:.65rem;letter-spacing:.3em;color:rgba(255,255,255,.28);text-transform:uppercase;}
+
+/* ── INTRO OVERLAY ── */
+#intro-overlay{
+  position:fixed;inset:0;z-index:500;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  pointer-events:none;gap:1.4rem;
+}
+#typewriter{
+  font-size:2.5rem;font-weight:300;letter-spacing:.08em;color:#fff;
+  min-height:3.5rem;text-align:center;opacity:0;
+  text-shadow:0 2px 20px rgba(0,0,0,.9), 0 0 40px rgba(192,132,252,0.6), 0 0 80px rgba(0,0,0,.8);
+  background:linear-gradient(135deg,rgba(5,5,16,.55),rgba(30,10,50,.45));
+  backdrop-filter:blur(4px);
+  padding:.7rem 2.2rem .8rem;
+  border-radius:4px;
+  border:1px solid rgba(192,132,252,.18);
+  max-width:90vw;
+}
+#intro-sub{
+  font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);opacity:0;text-align:center;
+}
+@media(max-width:600px){#typewriter{font-size:1.5rem;}}
+
+/* ── MAIN UI ── */
+#ui{
+  position:fixed;inset:0;z-index:200;pointer-events:none;opacity:0;
+  transition:opacity .8s ease;
+}
+#ui.show{opacity:1;pointer-events:none;} /* children handle their own events */
+#ui.show #topbar,
+#ui.show #back-btn,
+#ui.show #hash-banner,
+#ui.show #zone-label,
+#ui.show #center-hint{
+  pointer-events:all;
+}
+
+/* ── TOP BAR ── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.3rem 2rem;
+  background:linear-gradient(to bottom,rgba(5,5,16,.88),transparent);
+  pointer-events:all;
+}
+.tb-logo{
+  font-size:.9rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;
+  color:#fff;cursor:pointer;user-select:none;
+  text-shadow:0 0 20px rgba(192,132,252,.4);
+  transition:text-shadow .3s;
+}
+.tb-logo:hover{text-shadow:0 0 30px rgba(192,132,252,.8);}
+.tb-links{display:flex;gap:.8rem;flex-wrap:wrap;}
+.tb-btn{
+  font-family:'Sora',sans-serif;font-size:.58rem;letter-spacing:.13em;
+  text-transform:uppercase;padding:.38rem .9rem;border-radius:3px;
+  border:1px solid;background:transparent;cursor:pointer;
+  transition:all .25s;user-select:none;
+}
+.tb-btn:hover{filter:brightness(1.3);}
+.btn-xr{   color:#00c8ff;border-color:rgba(0,200,255,.35);background:rgba(0,200,255,.06);}
+.btn-prod{ color:#ffb347;border-color:rgba(255,179,71,.35);background:rgba(255,179,71,.06);}
+.btn-int{  color:#00ffd5;border-color:rgba(0,255,213,.35);background:rgba(0,255,213,.06);}
+.btn-story{color:#c084fc;border-color:rgba(192,132,252,.35);background:rgba(192,132,252,.06);}
+.btn-xr:hover{background:rgba(0,200,255,.15);}
+.btn-prod:hover{background:rgba(255,179,71,.15);}
+.btn-int:hover{background:rgba(0,255,213,.15);}
+.btn-story:hover{background:rgba(192,132,252,.15);}
+
+/* ── HASH BANNER ── */
+#hash-banner{
+  position:fixed;top:4.8rem;left:50%;transform:translateX(-50%);z-index:310;
+  font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;
+  padding:.45rem 1.4rem;border-radius:3px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(5,5,20,.88);backdrop-filter:blur(12px);
+  white-space:nowrap;opacity:0;transition:opacity .5s;pointer-events:none;
+}
+#hash-banner.show{opacity:1;}
+
+/* ── CENTER HINT ── */
+#center-hint{
+  position:fixed;bottom:3rem;left:50%;transform:translateX(-50%);
+  z-index:220;text-align:center;pointer-events:none;transition:opacity .6s;
+}
+#center-hint p{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.35);}
+#center-hint .hint-arrows{font-size:1rem;color:rgba(255,255,255,.2);margin-bottom:.4rem;animation:hintpulse 2s ease-in-out infinite;}
+@keyframes hintpulse{0%,100%{opacity:.2;}50%{opacity:.6;}}
+#center-hint.hide{opacity:0;}
+
+/* ── BACK BUTTON ── */
+#back-btn{
+  position:fixed;bottom:2.4rem;left:2rem;z-index:310;
+  font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;
+  padding:.55rem 1.3rem;border-radius:3px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(5,5,20,.75);backdrop-filter:blur(10px);
+  color:rgba(255,255,255,.65);cursor:pointer;
+  transition:all .3s;opacity:0;pointer-events:none;
+}
+#back-btn.show{opacity:1;pointer-events:all;}
+#back-btn:hover{border-color:rgba(255,255,255,.4);color:#fff;background:rgba(5,5,20,.95);}
+
+/* ── TOOLTIP ── */
+#tooltip{
+  position:fixed;z-index:400;max-width:260px;
+  padding:1.1rem 1.2rem;
+  background:rgba(5,5,20,.94);border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(16px);border-radius:4px;
+  pointer-events:none;opacity:0;transition:opacity .2s ease;
+}
+.tt-lobe-name{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:.5rem;font-weight:600;}
+.tt-sci{font-size:.74rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.tt-section{font-size:.62rem;color:rgba(255,255,255,.3);margin-top:.5rem;letter-spacing:.1em;}
+
+/* ── NODE LABEL ── */
+#node-label{
+  position:fixed;z-index:400;max-width:200px;
+  padding:.6rem .9rem;
+  background:rgba(5,5,20,.9);border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(12px);border-radius:3px;
+  pointer-events:none;opacity:0;transition:opacity .18s ease;
+  font-size:.72rem;font-weight:600;white-space:nowrap;
+}
+
+/* ── LOBE ZONE LABEL ── */
+#zone-label{
+  position:fixed;bottom:2.5rem;right:2rem;z-index:220;
+  pointer-events:none;text-align:right;opacity:0;transition:opacity .5s;
+}
+#zone-label.show{opacity:1;}
+.zl-eyebrow{font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.35);}
+.zl-title{font-size:1.1rem;font-weight:300;color:#fff;margin-top:.2rem;}
+
+/* ── SIDE PANEL ── */
+#panel{
+  position:fixed;top:0;right:0;bottom:0;width:380px;z-index:600;
+  background:rgba(5,5,20,.96);border-left:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(24px);
+  transform:translateX(100%);transition:transform .4s cubic-bezier(.22,1,.36,1);
+  overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+  pointer-events:all;
+  isolation:isolate;
+}
+#panel.open{transform:translateX(0);}
+#panel::-webkit-scrollbar{width:4px;}
+#panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px;}
+#panel-close{
+  position:sticky;top:0;width:100%;padding:1.1rem 1.5rem;
+  display:flex;justify-content:flex-end;z-index:10;
+  background:rgba(5,5,20,.96);border-bottom:1px solid rgba(255,255,255,.05);
+}
+#panel-close button{
+  font-family:'Sora',sans-serif;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;
+  background:transparent;border:1px solid rgba(255,255,255,.16);
+  color:rgba(255,255,255,.5);padding:.4rem .9rem;cursor:pointer;border-radius:2px;
+  transition:all .25s;
+}
+#panel-close button:hover{border-color:rgba(255,255,255,.4);color:#fff;}
+#panel-body{padding:1.6rem 1.8rem 3rem;pointer-events:all;}
+#panel a,#panel button,#panel-close{pointer-events:all !important;cursor:pointer;}
+#p-view-link,#p-lobe-link{
+  display:block;
+  pointer-events:all !important;
+  cursor:pointer;
+  -webkit-tap-highlight-color:rgba(192,132,252,.3);
+  touch-action:manipulation;
+  user-select:none;
+  -webkit-user-select:none;
+}
+#p-lobe-pill{
+  display:inline-block;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
+  padding:.3rem .7rem;border-radius:20px;margin-bottom:1rem;
+  border:1px solid;font-weight:600;
+}
+#p-name{font-size:1.4rem;font-weight:600;line-height:1.25;margin-bottom:.8rem;color:#fff;}
+#p-status{
+  display:inline-flex;align-items:center;gap:.45rem;
+  font-size:.65rem;padding:.32rem .75rem;border-radius:20px;
+  margin-bottom:1.3rem;border:1px solid;
+}
+#p-status.current{background:rgba(192,132,252,.1);border-color:rgba(192,132,252,.35);color:#c084fc;}
+#p-status.dev{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.35);color:#f59e0b;}
+#p-status.done{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.35);color:#22c55e;}
+#p-desc{font-size:.83rem;color:rgba(255,255,255,.52);line-height:1.75;margin-bottom:1.5rem;}
+.panel-section-label{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:.65rem;}
+#p-skills{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:2rem;}
+.skill-pill{
+  font-size:.64rem;padding:.24rem .65rem;border-radius:20px;
+  border:1px solid;letter-spacing:.04em;
+}
+#p-view-link{
+  display:inline-flex;align-items:center;gap:.55rem;
+  font-family:'Sora',sans-serif;
+  font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;
+  padding:.75rem 1.6rem;border:1px solid;border-radius:3px;
+  text-decoration:none;transition:all .3s;
+  background:transparent;
+}
+#p-view-link:hover{filter:brightness(1.25);padding-right:2rem;}
+#p-view-link,#p-lobe-link{
+  pointer-events:all !important;
+  cursor:pointer;
+  -webkit-tap-highlight-color:rgba(255,255,255,.15);
+  touch-action:manipulation;
+}
+@media(max-width:700px){
+  #p-view-link{
+    display:flex !important;min-height:56px;align-items:center;
+    margin-top:.8rem;width:100%;justify-content:center;
+    font-size:.72rem;padding:1rem;
+    pointer-events:all !important;
+  }
+  #p-lobe-link{
+    min-height:52px;display:flex !important;align-items:center;
+    padding:.6rem 0;pointer-events:all !important;
+  }
+}
+#p-view-link .arrow{transition:transform .25s;}
+#p-view-link:hover .arrow{transform:translateX(4px);}
+#p-lobe-link{
+  display:block;margin-top:.9rem;
+  font-size:.6rem;letter-spacing:.13em;color:rgba(255,255,255,.3);
+  text-decoration:none;text-transform:uppercase;
+  transition:color .25s;
+}
+#p-lobe-link:hover{color:rgba(255,255,255,.6);}
+
+
+/* ── ABOUT / CONTACT MODAL ── */
+#modal-overlay{
+  position:fixed;inset:0;z-index:9999;
+  background:rgba(2,2,12,.85);backdrop-filter:blur(18px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .35s;
+  padding:1.5rem;
+  touch-action:manipulation;
+}
+#modal-overlay.open{opacity:1;pointer-events:all !important;}
+#modal-box{
+  width:100%;max-width:520px;max-height:85vh;overflow-y:auto;
+  background:rgba(8,5,22,.98);border:1px solid rgba(192,132,252,.2);
+  border-radius:14px;padding:2.4rem 2.6rem 2.8rem;
+  scrollbar-width:thin;scrollbar-color:rgba(192,132,252,.15) transparent;
+  transform:translateY(18px);transition:transform .35s cubic-bezier(.22,1,.36,1);
+  -webkit-overflow-scrolling:touch;
+}
+#modal-overlay.open #modal-box{transform:translateY(0);}
+#modal-box::-webkit-scrollbar{width:3px;}
+#modal-box::-webkit-scrollbar-thumb{background:rgba(192,132,252,.18);border-radius:2px;}
+.modal-close{
+  float:right;background:transparent;border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.4);font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;padding:.35rem .8rem;border-radius:3px;
+  cursor:pointer;font-family:'Sora',sans-serif;margin-bottom:1.6rem;
+  transition:all .2s;
+}
+.modal-close:hover{border-color:rgba(255,255,255,.4);color:#fff;}
+.modal-tab-row{display:flex;gap:.5rem;margin-bottom:2rem;clear:both;}
+.modal-tab{
+  font-family:'Sora',sans-serif;font-size:.6rem;letter-spacing:.15em;
+  text-transform:uppercase;padding:.4rem 1.1rem;border-radius:3px;
+  border:1px solid rgba(255,255,255,.12);background:transparent;
+  color:rgba(255,255,255,.35);cursor:pointer;transition:all .2s;
+}
+.modal-tab.active{
+  background:rgba(192,132,252,.15);border-color:rgba(192,132,252,.45);color:#c084fc;
+}
+.modal-tab:hover:not(.active){border-color:rgba(255,255,255,.28);color:rgba(255,255,255,.7);}
+.modal-pane{display:none;}
+.modal-pane.active{display:block;}
+.modal-pane h2{
+  font-size:1.55rem;font-weight:600;color:#fff;margin-bottom:.5rem;
+  letter-spacing:-.01em;
+}
+.modal-pane .tagline{
+  font-size:.78rem;color:#c084fc;letter-spacing:.1em;margin-bottom:1.6rem;
+  text-transform:uppercase;
+}
+.modal-pane p{font-size:.84rem;color:rgba(255,255,255,.55);line-height:1.8;margin-bottom:1.1rem;}
+.modal-pane p b{color:rgba(255,255,255,.85);}
+.about-pills{display:flex;flex-wrap:wrap;gap:.4rem;margin:1.2rem 0 1.6rem;}
+.about-pill{
+  font-size:.62rem;padding:.26rem .7rem;border-radius:20px;
+  background:rgba(192,132,252,.1);border:1px solid rgba(192,132,252,.28);
+  color:#c084fc;letter-spacing:.06em;
+}
+.contact-list{display:flex;flex-direction:column;gap:.85rem;margin-top:.4rem;}
+.contact-item{
+  display:flex;align-items:center;gap:1rem;
+  padding:.9rem 1.1rem;border-radius:8px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  text-decoration:none;transition:all .25s;
+}
+.contact-item:hover{
+  background:rgba(192,132,252,.1);border-color:rgba(192,132,252,.3);
+  transform:translateX(4px);
+}
+.contact-icon{font-size:1.1rem;width:1.5rem;text-align:center;flex-shrink:0;}
+.contact-label{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.18rem;}
+.contact-value{font-size:.82rem;color:rgba(255,255,255,.8);}
+/* top-bar about/contact buttons */
+.btn-about{color:#e8d5ff;border-color:rgba(232,213,255,.25);background:rgba(232,213,255,.04);}
+.btn-about:hover{background:rgba(232,213,255,.1);}
+@media(max-width:700px){
+  #modal-box{padding:1.6rem 1.4rem 2rem;}
+  .modal-pane h2{font-size:1.25rem;}
+}
+
+/* ══════════════════════════════════════════════
+   MOBILE — full responsive overhaul
+   ══════════════════════════════════════════════ */
+
+/* Hamburger button (hidden on desktop) */
+#hamburger{
+  display:none;
+  flex-direction:column;gap:5px;cursor:pointer;
+  padding:.4rem;background:transparent;border:none;
+}
+#hamburger span{
+  display:block;width:22px;height:2px;
+  background:rgba(255,255,255,.7);border-radius:2px;
+  transition:all .28s;
+}
+#hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+#hamburger.open span:nth-child(2){opacity:0;}
+#hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* Mobile nav drawer */
+#mobile-nav{
+  display:none;
+  position:fixed;top:0;left:0;right:0;z-index:490;
+  background:rgba(5,5,20,.97);backdrop-filter:blur(20px);
+  padding:4.5rem 1.6rem 1.8rem;
+  border-bottom:1px solid rgba(192,132,252,.15);
+  transform:translateY(-100%);
+  transition:transform .32s cubic-bezier(.22,1,.36,1);
+}
+#mobile-nav.open{transform:translateY(0);}
+#mobile-nav .m-nav-btn{
+  display:block;width:100%;text-align:left;
+  font-family:'Sora',sans-serif;font-size:.78rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:.85rem 1rem;border-radius:6px;
+  border:1px solid rgba(255,255,255,.08);
+  background:transparent;color:rgba(255,255,255,.65);
+  cursor:pointer;margin-bottom:.5rem;transition:all .2s;
+}
+#mobile-nav .m-nav-btn:hover,
+#mobile-nav .m-nav-btn:active{
+  background:rgba(192,132,252,.12);
+  border-color:rgba(192,132,252,.3);color:#fff;
+}
+#mobile-nav .m-nav-divider{
+  height:1px;background:rgba(255,255,255,.07);
+  margin:.6rem 0;
+}
+
+@media(max-width:700px){
+  /* ── TOPBAR ── */
+  #topbar{padding:.9rem 1.2rem;}
+  .tb-links{display:none;}          /* hide desktop nav */
+  #hamburger{display:flex;}         /* show hamburger */
+  #mobile-nav{display:block;}       /* enable mobile nav */
+  .tb-logo{font-size:.78rem;}
+
+  /* ── TYPEWRITER ── */
+  #typewriter{
+    font-size:1.55rem !important;
+    padding:.6rem 1.4rem .7rem !important;
+    max-width:94vw !important;
+  }
+
+  /* ── HINT ── */
+  #center-hint p{font-size:.6rem;letter-spacing:.14em;}
+  #center-hint .hint-arrows{font-size:.85rem;}
+
+  /* ── BACK BUTTON ── */
+  #back-btn{
+    bottom:1.6rem;left:50%;
+    transform:translateX(-50%);
+    font-size:.58rem;padding:.5rem 1.2rem;
+    white-space:nowrap;
+  }
+
+  /* ── ZONE LABEL ── */
+  #zone-label{
+    display:block;
+    bottom:auto;top:5rem;right:1rem;
+    text-align:right;
+  }
+  .zl-title{font-size:.88rem;}
+
+  /* ── PANEL slides up from bottom on mobile ── */
+  #panel{
+    width:100vw;border-left:none;
+    top:8vh;bottom:0;right:0;height:92vh;
+    transform:translateY(110%);
+    border-top:1px solid rgba(255,255,255,.1);
+    border-radius:16px 16px 0 0;
+    transition:transform .4s cubic-bezier(.22,1,.36,1);
+    z-index:1200 !important;
+    pointer-events:all !important;
+  }
+  #panel.open{transform:translateY(0) !important;pointer-events:all !important;}
+  #panel-close{border-radius:16px 16px 0 0;padding:1rem 1.5rem;}
+  #panel-close::before{
+    content:'';display:block;width:40px;height:4px;
+    background:rgba(255,255,255,.18);border-radius:2px;
+    margin:0 auto .8rem;
+  }
+  #panel-body{padding:1.2rem 1.4rem 2.5rem;}
+  #p-name{font-size:1.15rem;}
+  #p-desc{font-size:.78rem;}
+
+  /* ── CHATBOT ── */
+  #chatbot{bottom:5.5rem;left:1.2rem;}
+  #chat-window{
+    width:calc(100vw - 3rem) !important;
+    max-height:55vh !important;
+    left:0 !important;
+  }
+
+  /* ── MUSIC / CHAT ICONS ── */
+  #music-btn,#chat-toggle{width:40px;height:40px;}
+
+  /* ── MODAL ── */
+  #modal-overlay{
+    padding:.8rem;
+    z-index:9999 !important;
+    touch-action:manipulation;
+    -webkit-overflow-scrolling:touch;
+  }
+  #modal-box{
+    padding:1.4rem 1.2rem 1.8rem;
+    max-height:90vh;border-radius:10px;
+    touch-action:pan-y;
+    -webkit-overflow-scrolling:touch;
+  }
+  .modal-close{
+    min-height:44px;min-width:44px;
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:.5rem 1rem;
+  }
+  .modal-tab{
+    min-height:44px;
+    display:inline-flex;align-items:center;
+  }
+  .modal-pane h2{font-size:1.2rem;}
+  .modal-pane .tagline{font-size:.68rem;}
+  .modal-pane p{font-size:.78rem;}
+  .about-pill{font-size:.58rem;padding:.2rem .55rem;}
+  .contact-value{font-size:.75rem;}
+  .contact-item{
+    min-height:56px;
+    touch-action:manipulation;
+  }
+
+  /* ── TOOLTIP — hide on mobile (use tap instead) ── */
+  #tooltip{display:none;}
+}
+
+@media(max-width:380px){
+  #typewriter{font-size:1.25rem !important;}
+  #chatbot{bottom:5rem;left:.8rem;}
+}
+
+/* ── CURSOR ── */
+body.pointer{cursor:pointer;}
+
+/* ── CHATBOT ── */
+#chatbot{
+  position:fixed;bottom:7.5rem;left:2rem;z-index:800;
+  display:flex;flex-direction:column;align-items:flex-start;gap:.6rem;
+  pointer-events:all;
+}
+#chat-toggle{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,#7c3aed,#c084fc);
+  border:none;cursor:pointer;font-size:1.2rem;
+  box-shadow:0 0 18px rgba(192,132,252,.5);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .25s,box-shadow .25s;color:#fff;
+}
+#chat-toggle:hover{transform:scale(1.1);box-shadow:0 0 28px rgba(192,132,252,.8);}
+#chat-window{
+  width:300px;max-height:420px;
+  background:rgba(8,5,22,.96);
+  border:1px solid rgba(192,132,252,.25);
+  border-radius:12px;backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;overflow:hidden;
+  opacity:0;pointer-events:none;
+  transform:translateY(12px) scale(.97);
+  transition:all .28s cubic-bezier(.22,1,.36,1);
+}
+#chat-window.open{opacity:1;pointer-events:all;transform:translateY(0) scale(1);}
+#chat-header{
+  padding:.8rem 1rem;
+  border-bottom:1px solid rgba(192,132,252,.15);
+  font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;
+  color:#c084fc;display:flex;align-items:center;gap:.5rem;
+}
+#chat-header span{font-size:1rem;}
+#chat-msgs{
+  flex:1;overflow-y:auto;padding:.8rem;
+  display:flex;flex-direction:column;gap:.6rem;
+  scrollbar-width:thin;scrollbar-color:rgba(192,132,252,.2) transparent;
+  max-height:280px;
+}
+#chat-msgs::-webkit-scrollbar{width:3px;}
+#chat-msgs::-webkit-scrollbar-thumb{background:rgba(192,132,252,.2);border-radius:2px;}
+.chat-msg{
+  font-size:.75rem;line-height:1.55;padding:.55rem .75rem;
+  border-radius:8px;max-width:95%;
+}
+.chat-msg.bot{
+  background:rgba(192,132,252,.12);border:1px solid rgba(192,132,252,.2);
+  color:rgba(255,255,255,.85);align-self:flex-start;
+}
+.chat-msg.user{
+  background:rgba(0,200,255,.1);border:1px solid rgba(0,200,255,.2);
+  color:rgba(255,255,255,.75);align-self:flex-end;text-align:right;
+}
+.chat-suggestion{
+  display:inline-block;font-size:.64rem;padding:.22rem .55rem;
+  border:1px solid;border-radius:20px;cursor:pointer;margin:.2rem .15rem 0;
+  transition:all .2s;background:transparent;font-family:'Sora',sans-serif;
+}
+.chat-suggestion:hover{filter:brightness(1.3);}
+#chat-input-row{
+  display:flex;gap:.4rem;padding:.7rem;
+  border-top:1px solid rgba(192,132,252,.12);
+}
+#chat-input{
+  flex:1;background:rgba(255,255,255,.06);
+  border:1px solid rgba(192,132,252,.2);border-radius:6px;
+  padding:.42rem .65rem;font-family:'Sora',sans-serif;
+  font-size:.72rem;color:#fff;outline:none;
+  transition:border-color .2s;
+}
+#chat-input:focus{border-color:rgba(192,132,252,.6);}
+#chat-input::placeholder{color:rgba(255,255,255,.28);}
+#chat-send{
+  background:linear-gradient(135deg,#7c3aed,#c084fc);
+  border:none;border-radius:6px;padding:.42rem .75rem;
+  color:#fff;cursor:pointer;font-size:.8rem;transition:filter .2s;
+}
+#chat-send:hover{filter:brightness(1.2);}
+@media(max-width:700px){
+  #chat-window{width:calc(100vw - 2rem);}
+  #chatbot{right:1rem;bottom:1.5rem;}
+}
+
+
+/* ── MUSIC BUTTON ── */
+#music-btn{width:44px;height:44px;border-radius:50%;border:2px solid #ffffff;background:#ffffff;backdrop-filter:blur(12px);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0;position:relative;font-size:1.3rem;}
+#music-btn:hover{transform:scale(1.1);box-shadow:0 0 16px rgba(255,255,255,.4);}
+#music-note{color:#050510;line-height:1;font-style:normal;}
+#music-btn:hover{border-color:#c084fc;background:rgba(50,10,80,.7);transform:scale(1.1);}
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════ CANVAS ══════════════ -->
+<canvas id="c"></canvas>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="ld-orb"></div>
+  <p class="ld-txt">Initialising neural pathways…</p>
+</div>
+
+<!-- INTRO OVERLAY -->
+<div id="intro-overlay">
+  <div id="typewriter"></div>
+  <div id="intro-sub"></div>
+</div>
+
+<!-- MAIN UI -->
+<div id="ui">
+  <div id="topbar">
+    <span class="tb-logo" onclick="App.resetBrain();closeMobileNav()">VIDHI DOSHI</span>
+    <div class="tb-links">
+      <button class="tb-btn btn-xr"    onclick="App.jumpHash('xr-interactive')">XR &amp; Interactive</button>
+      <button class="tb-btn btn-prod"  onclick="App.jumpHash('product-furniture')">Product Design</button>
+      <button class="tb-btn btn-int"   onclick="App.jumpHash('interior-spatial')">Interior &amp; Spatial</button>
+      <button class="tb-btn btn-story" onclick="App.jumpHash('storytelling-media')">Storytelling</button>
+      <button class="tb-btn btn-about" onclick="Modal.open('about')">About</button>
+      <button class="tb-btn btn-about" onclick="Modal.open('contact')">Contact</button>
+    </div>
+    <button id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+<div id="mobile-nav">
+  <button class="m-nav-btn btn-xr"    onclick="App.jumpHash('xr-interactive');closeMobileNav()" style="color:#00c8ff;border-color:rgba(0,200,255,.2);">&#9632; XR &amp; Interactive</button>
+  <button class="m-nav-btn btn-prod"  onclick="App.jumpHash('product-furniture');closeMobileNav()" style="color:#ffb347;border-color:rgba(255,179,71,.2);">&#9632; Product Design</button>
+  <button class="m-nav-btn btn-int"   onclick="App.jumpHash('interior-spatial');closeMobileNav()" style="color:#00ffd5;border-color:rgba(0,255,213,.2);">&#9632; Interior &amp; Spatial</button>
+  <button class="m-nav-btn btn-story" onclick="App.jumpHash('storytelling-media');closeMobileNav()" style="color:#c084fc;border-color:rgba(192,132,252,.2);">&#9632; Storytelling</button>
+  <div class="m-nav-divider"></div>
+  <button class="m-nav-btn" onclick="Modal.open('about');closeMobileNav()">About Vidhi</button>
+  <button class="m-nav-btn" onclick="Modal.open('contact');closeMobileNav()">Contact</button>
+</div>
+
+  <div id="hash-banner"></div>
+
+  <div id="center-hint">
+    <div class="hint-arrows">&#8593; &#8595; &#8592; &#8594;</div>
+    <p>Hover a lobe to explore &nbsp;&middot;&nbsp; Click to dive in &nbsp;&middot;&nbsp; Drag to rotate</p>
+  </div>
+
+  <button id="back-btn" onclick="App.resetBrain()">&#8592; Back to Full Brain</button>
+
+  <div id="zone-label">
+    <p class="zl-eyebrow" id="zl-eye"></p>
+    <p class="zl-title"   id="zl-tit"></p>
+  </div>
+</div>
+
+<!-- TOOLTIP (lobe hover) -->
+<div id="tooltip">
+  <div class="tt-lobe-name" id="tt-name"></div>
+  <div class="tt-sci"       id="tt-sci"></div>
+  <div class="tt-section"   id="tt-sec"></div>
+</div>
+
+<!-- NODE LABEL (project hover) -->
+<div id="node-label"></div>
+
+<!-- SIDE PANEL -->
+<div id="panel">
+  <div id="panel-close"><button onclick="App.closePanel()" ontouchend="event.stopPropagation();App.closePanel();">&#10005; Close</button></div>
+  <div id="panel-body">
+    <span id="p-lobe-pill"></span>
+    <h2 id="p-name"></h2>
+    <span id="p-status"></span>
+    <p id="p-desc"></p>
+    <p class="panel-section-label">Skills Used</p>
+    <div id="p-skills"></div>
+    <a id="p-view-link" href="#" target="_blank">View Full Project <span class="arrow">&#8594;</span></a>
+    <a id="p-lobe-link" href="#" target="_blank">View all projects in this section &#8594;</a>
+  </div>
+</div>
+
+<!-- ABOUT / CONTACT MODAL  -  outside #ui, always clickable -->
+<div id="modal-overlay" onclick="if(event.target===this)Modal.close()">
+  <div id="modal-box">
+    <button class="modal-close" onclick="Modal.close()">&#10005; Close</button>
+    <div class="modal-tab-row">
+      <button class="modal-tab active" id="tab-about"   onclick="Modal.switchTab('about')">About</button>
+      <button class="modal-tab"        id="tab-contact" onclick="Modal.switchTab('contact')">Contact</button>
+    </div>
+    <div class="modal-pane active" id="pane-about">
+      <h2>Vidhi Doshi</h2>
+      <div class="tagline">Creative Technologist &middot; Experience Designer &middot; Immersive Storyteller</div>
+      <p>I prototype interactive experiences at the intersection of <b>XR, AI, and experiential storytelling</b>. Currently completing my MS in Design, Business and Technology at the USC Iovine and Young Academy (GPA 3.92), I build things that blur the line between digital and physical, from VR training worlds to heritage spaces to generative art systems.</p>
+      <p>As co-founder of <b>Aura Lab</b>, I led end-to-end experience design for a Dunhuang Caves VR project in Unity, driving spatial layout, interaction flows, and narrative pacing from concept through trailer-ready build. I am also skilled at <b>content strategy and data analysis</b>, having generated 278K+ LinkedIn impressions with 31% CTR and built Excel automation that cut reporting time by 80%.</p>
+      <p>I believe the best design does not just solve problems. It <b>creates new ways of feeling</b> inside a space, a system, or a story.</p>
+      <div class="about-pills">
+        <span class="about-pill">Unity (VR/MR)</span>
+        <span class="about-pill">Lens Studio</span>
+        <span class="about-pill">Figma</span>
+        <span class="about-pill">SketchUp</span>
+        <span class="about-pill">AutoCAD</span>
+        <span class="about-pill">Meta Quest</span>
+        <span class="about-pill">C# (Unity)</span>
+        <span class="about-pill">HTML/CSS</span>
+        <span class="about-pill">p5.js</span>
+        <span class="about-pill">Antigravity</span>
+        <span class="about-pill">Google AI Studio</span>
+        <span class="about-pill">Gemini</span>
+        <span class="about-pill">Claude Code</span>
+        <span class="about-pill">ChatGPT</span>
+        <span class="about-pill">ElevenLabs</span>
+        <span class="about-pill">Midjourney</span>
+        <span class="about-pill">DALL-E</span>
+        <span class="about-pill">Stable Diffusion</span>
+        <span class="about-pill">RunwayML</span>
+        <span class="about-pill">Veo3</span>
+        <span class="about-pill">Suno</span>
+        <span class="about-pill">Adobe Firefly</span>
+        <span class="about-pill">Adobe Creative Suite</span>
+        <span class="about-pill">Audacity</span>
+        <span class="about-pill">WordPress</span>
+        <span class="about-pill">Google Analytics</span>
+        <span class="about-pill">Excel Automation</span>
+        <span class="about-pill">SproutSocial</span>
+        <span class="about-pill">XR Design</span>
+        <span class="about-pill">Spatial Interaction</span>
+        <span class="about-pill">Narrative Design</span>
+        <span class="about-pill">Level Design</span>
+        <span class="about-pill">Content Strategy</span>
+        <span class="about-pill">Immersive Storytelling</span>
+        <span class="about-pill">Rapid Prototyping</span>
+        <span class="about-pill">QA Workflows</span>
+        <span class="about-pill">User Testing</span>
+        <span class="about-pill">Environmental Storytelling</span>
+        <span class="about-pill">Data Analysis</span>
+        <span class="about-pill">Generative Art</span>
+        <span class="about-pill">Creative Tech</span>
+      </div>
+      <p style="font-size:.75rem;color:rgba(255,255,255,.28);">USC Iovine and Young Academy &middot; Los Angeles, CA &middot; MS Design, Business and Technology</p>
+    </div>
+    <div class="modal-pane" id="pane-contact">
+      <h2>Let's Connect</h2>
+      <div class="tagline">Open to immersive design, creative tech &amp; content roles</div>
+      <div class="contact-list">
+        <a class="contact-item" href="/cdn-cgi/l/email-protection#3046595458591e545f4358591e475f425b70575d51595c1e535f5d">
+          <span class="contact-icon">&#9993;</span>
+          <div><div class="contact-label">Email</div><div class="contact-value"><span class="__cf_email__" data-cfemail="02746b666a6b2c666d716a6b2c756d706942656f636b6e2c616d6f">[email&#160;protected]</span></div></div>
+        </a>
+        <a class="contact-item" href="https://www.linkedin.com/in/vidhi-doshi-646a52174/" target="_blank">
+          <span class="contact-icon">&#128101;</span>
+          <div><div class="contact-label">LinkedIn</div><div class="contact-value">linkedin.com/in/vidhi-doshi</div></div>
+        </a>
+        <a class="contact-item" href="https://sites.google.com/usc.edu/vidhidoshiportfolio/home?authuser=0" target="_blank">
+          <span class="contact-icon">&#127760;</span>
+          <div><div class="contact-label">Full Portfolio</div><div class="contact-value">Vidhi Doshi Portfolio (extended version)</div></div>
+        </a>
+
+      </div>
+      <p style="margin-top:1.6rem;font-size:.75rem;color:rgba(255,255,255,.25);line-height:1.7;">Based in Los Angeles &middot; Available for internships, freelance, and full-time roles in XR design, content strategy, creative technology, and immersive experience design.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CHATBOT + MUSIC  -  bottom LEFT, stacked -->
+<div id="chatbot">
+  <div id="chat-window">
+    <div id="chat-header"><span>&#129504;</span>&nbsp; Find My Projects</div>
+    <div id="chat-msgs"></div>
+    <div id="chat-input-row">
+      <input id="chat-input" type="text" placeholder="Try: VR, storytelling, furniture…" autocomplete="off"/>
+      <button id="chat-send" onclick="Chat.send()">&#8594;</button>
+    </div>
+  </div>
+  <button id="chat-toggle" onclick="Chat.toggle()" title="Find a project">&#129504;</button>
+  <button id="music-btn" onclick="toggleMusic()" title="Mute music">
+    <span id="music-note" style="color:#050510;font-size:1.2rem;">♬</span>
+    <span id="music-slash" style="display:none;position:absolute;width:100%;height:2px;background:#ff4466;top:50%;left:0;transform:rotate(-45deg);transform-origin:center;pointer-events:none;border-radius:2px;"></span>
+  </button>
+</div>
+
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════
+const LOBES = {
+  temporal:{
+    key:'temporal',label:'Temporal Lobe',
+    section:'XR & Interactive Experiences',
+    hash:'xr-interactive',
+    color:0x00c8ff,hex:'#00c8ff',rgb:'0,200,255',
+    sciPos:new THREE.Vector3(-2.6,-.15,0.9),
+    tooltip:'Your Temporal Lobe processes new sensory realities, spatial audio, memory encoding, and immersive experience  -  exactly what XR design demands.',
+    url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/xr-interactive-experiences',
+    lightIntensity:1.2,lightDist:8,
+    lobeSpread:1.1
+  },
+  frontal:{
+    key:'frontal',label:'Frontal Lobe',
+    section:'Product & Furniture Design',
+    hash:'product-furniture',
+    color:0xffb347,hex:'#ffb347',rgb:'255,179,71',
+    sciPos:new THREE.Vector3(0.4,0.9,2.8),
+    tooltip:'Your Frontal Lobe drives planning, goal-directed behavior, invention, and creative problem-solving within physical constraints.',
+    url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/product-furniture-design',
+    lightIntensity:1.0,lightDist:7,
+    lobeSpread:.75
+  },
+  parietal:{
+    key:'parietal',label:'Parietal Lobe',
+    section:'Interior & Spatial Design',
+    hash:'interior-spatial',
+    color:0x00ffd5,hex:'#00ffd5',rgb:'0,255,213',
+    sciPos:new THREE.Vector3(0,2.35,0.0),
+    tooltip:'Your Parietal Lobe controls spatial awareness, 3D environment perception, navigation, and sensory integration  -  the architecture of physical space.',
+    url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/interior-spatial-design',
+    lightIntensity:1.1,lightDist:7,
+    lobeSpread:.85
+  },
+  occipital:{
+    key:'occipital',label:'Occipital Lobe',
+    section:'Storytelling & Media',
+    hash:'storytelling-media',
+    color:0xc084fc,hex:'#c084fc',rgb:'192,132,252',
+    sciPos:new THREE.Vector3(0,0.2,-2.9),
+    tooltip:'Your Occipital Lobe is pure visual processing, emotional response to imagery, and meaning-making through narrative  -  storytelling made neural.',
+    url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/storytelling-media',
+    lightIntensity:1.0,lightDist:7,
+    lobeSpread:.8
+  }
+};
+
+const HASH_MAP = {
+  'xr-interactive':'temporal',
+  'product-furniture':'frontal',
+  'interior-spatial':'parietal',
+  'storytelling-media':'occipital'
+};
+
+const PROJECTS = [
+  // TEMPORAL  -  XR (8)
+  {lobe:'temporal',id:'dunhuang-vr',name:'Dunhuang VR Experience',status:'dev',
+   desc:'Production-scale VR of the ancient Dunhuang Caves via Aura Lab. Owning environment layout, story pacing, and experience flow end-to-end toward a trailer-ready build.',
+   skills:['VR Narrative Design','World-Building','Cultural Research','Unity','Level Design','Aura Lab'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/xr-interactive-experiences/dunhuang-vr?authuser=0'},
+  {lobe:'temporal',id:'xr-nlp',name:'XR NLP Foundation',status:'dev',
+   desc:'Unity-based VR/MR training platform teaching NLP state management through embodied practice  -  early-career learners rehearse high-stakes moments in-headset.',
+   skills:['NLP','XR Interaction Design','AI Integration','Unity','Embodied UX'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/home?authuser=0'},
+  {lobe:'temporal',id:'they-cant-see',name:"They Can't See: Save the Wild",status:'done',
+   desc:'MR animal-rescue game blending real-world actions with VR storytelling. Dual-hand mechanics, portal transitions. 30% playability improvement across 5+ QA sessions.',
+   skills:['Mixed Reality','Spatial Interaction','Game Design','Multitasking UX','Unity'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/xr-interactive-experiences/they-cant-see?authuser=0'},
+  {lobe:'temporal',id:'reflexes-vr',name:'Reflexes VR',status:'done',
+   desc:'Fast-paced Meta Quest 3 game sharpening reflexes through dynamic rod-catching. Tests timing, precision, and focus under pressure.',
+   skills:['VR Game Design','Interaction Design','Reflex-Based UX','Unity','Meta Quest 3'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/xr-interactive-experiences/reflexes-vr?authuser=0'},
+  {lobe:'temporal',id:'dunhuang-mystery',name:'Dunhuang Cave Mystery',status:'done',
+   desc:'Exploration game starting in a museum, following audio clues to a hidden portal into ancient Dunhuang. Branching puzzles woven into the environment.',
+   skills:['Immersive Game Design','Historical Research','Spatial Audio','Unity','Cultural Storytelling'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/xr-interactive-experiences/dunhuang-cave-mystery?authuser=0'},
+  {lobe:'temporal',id:'mimi',name:'Mimi: The Ball Game',status:'done',
+   desc:'Three escalating levels guiding Mimi through obstacles. Rising difficulty tests reflexes, spatial reasoning, and persistence from start to final-stage finish.',
+   skills:['Unity Game Dev','Level Design','Physics Design','Player Psychology'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/xr-interactive-experiences/mimi-the-ball-game?authuser=0'},
+  {lobe:'temporal',id:'echo-vr',name:'Echo: Auditory First Responder VR',status:'done',
+   desc:'Trains first responders to locate gunfire using spatial audio in realistic VR environments. Enhances situational awareness and rapid response under pressure.',
+   skills:['Spatial Audio Design','VR Simulation','First Responder UX','Unity'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/xr-interactive-experiences/echo-auditory-first-responder-vr-training?authuser=0'},
+  {lobe:'temporal',id:'ar-card',name:'AR Credit Card Interface',status:'done',
+   desc:'Interactive AR debit card UI with History, Transfer, Statistics, and Profile panels  -  built for UI/UX for AR & VR course using Adobe Aero.',
+   skills:['AR Interface Design','Adobe Aero','Adobe Photoshop','UI/UX for AR/VR'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/xr-interactive-experiences/ar-credit-card?authuser=0'},
+  // FRONTAL  -  Product (2)
+  {lobe:'frontal',id:'tri-mod',name:'Tri-Mod: The Modular Wardrobe',status:'done',
+   desc:'Patented wardrobe merging minimalism with geometry. Four modular units, removable shelves, designed for couples sharing a space where flexibility must coexist with aesthetics.',
+   skills:['Industrial Design','Geometric Thinking','Modular Systems','Furniture Design','CAD','Patent Process'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/product-furniture-design/tri-mod-the-modular-wardrobe?authuser=0'},
+  {lobe:'frontal',id:'trust-process',name:'Trust the Process: Generative Art',status:'done',
+   desc:'Abstract generative animation  -  scattered cubes rise slowly into three thriving trees, a falling apple marks arrival. An ode to patience and persistence made visual.',
+   skills:['Generative Art','Processing / p5.js','Coding for Art','Abstract Visualization','Iteration'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/xr-interactive-experiences/trust-the-process-abstract-generative-art?authuser=0'},
+  // PARIETAL  -  Interior (3)
+  {lobe:'parietal',id:'sustainable-office',name:'Sustainable Office Design',status:'done',
+   desc:'Wellness-first workspace for Tripta Innovation with cafés, recreational zones, and intentional circulation paths  -  encouraging movement and boosting team productivity.',
+   skills:['Interior Architecture','Ergonomic Design','Sustainable Design','Spatial Planning','Employee Wellness'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/interior-spatial-design/sustainable-office-design?authuser=0'},
+  {lobe:'parietal',id:'tripta-freelance',name:'Tripta: Freelance Interior Project',status:'done',
+   desc:'TRIPTA Innovations Pvt. Ltd., Surat (accounting software since 1995 - RADIX and RELY). Enabled communication between department leaders, divided departments, and modernised their office interior design through color psychology and spatial planning.',
+   skills:['Client Communication','Space Planning','Modern Office Design','Departmental Zoning','Color Psychology','Autodesk','Interior Architecture'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/interior-spatial-design/tripta-freelance-project?authuser=0'},
+  {lobe:'parietal',id:'sardar-manzil',name:'The Palace: Sardar Manzil',status:'done',
+   desc:"Adaptive reuse of a 450-year-old structure gifted by Noor Jahan. Proposed boutique hotel in Bharuch  -  6,250 sq/ft, brick walls, wooden columns, Kota Stone flooring.",
+   skills:['Heritage Architecture','Adaptive Reuse','Boutique Hotel Design','Historical Research','6250 sq/ft Planning'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/interior-spatial-design/the-palace-sardar-manzil?authuser=0'},
+  // OCCIPITAL  -  Storytelling (3  -  spec says 2 but lists 3)
+  {lobe:'occipital',id:'usc-rossier',name:'USC Rossier School of Education',status:'current',
+   desc:'Digital communications and content strategy role generating 278K+ LinkedIn impressions with 31% CTR. Built Excel automation cutting monthly analytics reporting from 4-5 hours to under 1 hour. Synthesised multi-platform data into leadership-ready insights.',
+   skills:['Content Strategy','LinkedIn Marketing','Data Analysis','Excel Automation','Google Analytics','Instagram Insights','SproutSocial','Audience Engagement'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/storytelling-media/usc-rossier-school-of-education?authuser=0'},
+  {lobe:'occipital',id:'podcast',name:'Vibe with Vidhi Doshi (Podcast)',status:'done',
+   desc:'Two-season podcast hosting under-25 guests from diverse fields. 120+ listens, 50+ speakers curated. Candid coffee-chat format, iterated via listener data in Season 2.',
+   skills:['Content Creation','Interviewing','Audio Production','Spotify Publishing','Personal Branding'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/storytelling-media/podcast-vibe-with-vidhi-doshi?authuser=0'},
+  {lobe:'occipital',id:'alexa-ad',name:'Amazon Alexa Advertisement',status:'done',
+   desc:"Witty ad written, directed, and produced solo  -  blending humor with everyday moments to spotlight Alexa's seamless voice convenience.",
+   skills:['Scriptwriting','Directing','Video Production','Advertising Strategy','Humor Writing'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/storytelling-media/amazon-alexa-advertisement?authuser=0'},
+  {lobe:'occipital',id:'dance-film',name:'Did You Dance Today? (Short Film)',status:'done',
+   desc:"Harry's journey after an accident  -  rediscovering joy through his mother's dance. Life adapts like rhythm; this is the story of that adaptation.",
+   skills:['Screenplay Writing','Directing','Character Arc Design','Emotional Storytelling','Film Production'],
+   url:'https://sites.google.com/usc.edu/vidhidoshiportfolio/projects/storytelling-media/did-you-dance-today?authuser=0'},
+];
+
+// ═══════════════════════════════════════════════════════════
+// THREE.JS CORE
+// ═══════════════════════════════════════════════════════════
+const W=()=>window.innerWidth, H=()=>window.innerHeight;
+const canvas=document.getElementById('c');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(W(),H());
+renderer.setClearColor(0x050510,1);
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x050510);
+scene.fog=new THREE.FogExp2(0x050510,.022);
+
+const camera=new THREE.PerspectiveCamera(55,W()/H(),.1,500);
+const isMobileDevice=window.innerWidth<700;
+camera.position.set(0,.5,10);
+camera.lookAt(0,0,0);
+
+// Camera look-at target (animated)
+const camLookAt=new THREE.Vector3(0,0,0);
+const camLookAtTarget=new THREE.Vector3(0,0,0);
+
+// ── GROUPS ──────────────────────────────────────
+const faceGroup=new THREE.Group();
+scene.add(faceGroup);
+faceGroup.visible=false;
+
+const brainGroup=new THREE.Group();
+scene.add(brainGroup);
+brainGroup.visible=false;
+
+const nodeGroup=new THREE.Group();
+brainGroup.add(nodeGroup);
+
+// ── STARS ────────────────────────────────────────
+(()=>{
+  const sg=new THREE.BufferGeometry();
+  const sp=new Float32Array(2000*3);
+  const ss=new Float32Array(2000);
+  for(let i=0;i<2000;i++){
+    sp[i*3]=(Math.random()-.5)*400;
+    sp[i*3+1]=(Math.random()-.5)*400;
+    sp[i*3+2]=(Math.random()-.5)*400;
+    ss[i]=Math.random()*.08+.02;
+  }
+  sg.setAttribute('position',new THREE.BufferAttribute(sp,3));
+  sg.setAttribute('size',new THREE.BufferAttribute(ss,1));
+  scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xffffff,size:.06,transparent:true,opacity:.55})));
+})();
+
+// ── LIGHTS ────────────────────────────────────────
+scene.add(new THREE.AmbientLight(0x1a1a2e,.35));
+
+const LOBE_LIGHTS={};
+Object.values(LOBES).forEach(l=>{
+  const pl=new THREE.PointLight(l.color,l.lightIntensity,l.lightDist);
+  pl.position.copy(l.sciPos);
+  scene.add(pl);
+  LOBE_LIGHTS[l.key]=pl;
+  l._light=pl;
+  l._baseIntensity=l.lightIntensity;
+});
+
+// ── BUILD FACE  -  Pixar/Disney Vidhi (photo-matched) ────────────────────────
+// Skin: warm golden-brown #c47848 | Hair: near-black wavy #1c1008
+// Big Pixar eyes with catchlights | Round soft cheeks | Big warm smile
+(()=>{
+  const C={
+    skin:0xfff0e0, skinSh:0xf8d5b0, hair:0x1c1008, hairHi:0x3a2010,
+    eyeW:0xffffff, iris:0x2a1500, pupil:0x050200,
+    lip:0xb8355a, teeth:0xffffff, brow:0x180a02
+  };
+  const mSkin=(col,shi=28)=>new THREE.MeshPhongMaterial({
+    color:col||C.skin,emissive:0x331408,emissiveIntensity:.35,shininess:shi,specular:0xffccaa
+  });
+
+  // HEAD  -  round Pixar oval, wide cheeks
+  const headG=new THREE.SphereGeometry(1,80,80);
+  const hP=headG.attributes.position;
+  for(let i=0;i<hP.count;i++){
+    let x=hP.getX(i),y=hP.getY(i),z=hP.getZ(i);
+    if(y>-0.3&&y<0.4) x*=1+(0.4-Math.abs(y-0.05))*0.18;
+    if(y>0.55) x*=1-(y-0.55)*0.35;
+    if(y<-0.45){x*=1-((-y-0.45)*0.55);z*=1-((-y-0.45)*0.25);}
+    if(z>0.3) z*=1+z*0.08;
+    hP.setXYZ(i,x,y,z);
+  }
+  headG.computeVertexNormals();
+  faceGroup.add(new THREE.Mesh(headG,mSkin()));
+
+  // Cheek blush
+  [-0.72,0.72].forEach(cx=>{
+    const cM=new THREE.MeshBasicMaterial({color:0xff4477,transparent:true,opacity:.38});
+    const ch=new THREE.Mesh(new THREE.SphereGeometry(0.13,12,12),cM);
+    ch.position.set(cx,-0.08,0.88); ch.scale.set(1,0.65,0.5); faceGroup.add(ch);
+  });
+
+  // HAIR  -  voluminous dark wavy
+  const hairM=new THREE.MeshPhongMaterial({color:C.hair,emissive:0x080400,emissiveIntensity:.3,shininess:60,specular:0x2a1a08});
+  const hairHiM=new THREE.MeshPhongMaterial({color:C.hairHi,emissive:0x100800,emissiveIntensity:.2,shininess:80,specular:0x3a2010});
+
+  // Hair cap
+  const hairCapG=new THREE.SphereGeometry(1.08,48,28,0,Math.PI*2,0,Math.PI*0.58);
+  const hc=new THREE.Mesh(hairCapG,hairM); hc.position.set(0,0.04,-0.06); hc.scale.set(1.04,1,1); faceGroup.add(hc);
+  // Side volume
+  [-1.08,1.08].forEach(sx=>{
+    const sv=new THREE.Mesh(new THREE.SphereGeometry(0.62,20,20),hairM);
+    sv.position.set(sx,0.05,0.05); sv.scale.set(0.7,1.35,0.85); faceGroup.add(sv);
+  });
+  // Back hair (long)
+  const bhG=new THREE.SphereGeometry(0.98,24,24,0,Math.PI*2,Math.PI*0.35,Math.PI*0.52);
+  const bh=new THREE.Mesh(bhG,hairM); bh.position.set(0,-0.14,-0.12); bh.scale.set(1.06,1.4,1.1); faceGroup.add(bh);
+
+  // Wavy strands (her curly wavy signature)
+  [
+    [-0.88,0.45,0.18, -0.98,-0.05,-1.05,-0.55,-0.95,-1.05,0.052],
+    [-0.78,0.35,0.28, -0.92,-0.15,-0.82,-0.72,-0.78,-1.18,0.044],
+    [-0.95,0.15,0.08, -1.08,-0.38,-0.98,-0.88,-0.88,-1.32,0.048],
+    [-0.68,0.50,0.32, -0.78,-0.02,-0.72,-0.65,-0.68,-1.00,0.038],
+    [ 0.88,0.45,0.18,  0.98,-0.05, 1.05,-0.55, 0.95,-1.05,0.052],
+    [ 0.78,0.35,0.28,  0.92,-0.15, 0.82,-0.72, 0.78,-1.18,0.044],
+    [ 0.95,0.15,0.08,  1.08,-0.38, 0.98,-0.88, 0.88,-1.32,0.048],
+    [ 0.68,0.50,0.32,  0.78,-0.02, 0.72,-0.65, 0.68,-1.00,0.038],
+  ].forEach(([sx,sy,sz,mx1,my1,mx2,my2,ex,ey,th],i)=>{
+    const curve=new THREE.CatmullRomCurve3([
+      new THREE.Vector3(sx,sy,sz),
+      new THREE.Vector3(mx1,my1,sz-0.12),
+      new THREE.Vector3(mx1*0.96,my1-0.28,sz*0.6-0.05),
+      new THREE.Vector3(mx2,my2,sz*0.6+0.08),
+      new THREE.Vector3(ex,ey,-0.15),
+    ]);
+    faceGroup.add(new THREE.Mesh(new THREE.TubeGeometry(curve,14,th,7,false),i%3===0?hairHiM:hairM));
+  });
+
+  // ── HAT  -  stylish beret/beanie that lifts off to reveal brain ──
+  const hatGroup = new THREE.Group();
+  // Hat brim (flat torus ring around head)
+  const brimG = new THREE.TorusGeometry(1.14, 0.12, 8, 40);
+  const hatM  = new THREE.MeshPhongMaterial({color:0x1a0a2e, emissive:0x0a0518, emissiveIntensity:.4,
+    shininess:55, specular:0x6633cc});
+  const brim  = new THREE.Mesh(brimG, hatM);
+  brim.rotation.x = Math.PI/2;
+  brim.position.y = 0.62;
+  hatGroup.add(brim);
+  // Hat dome (rounded top)
+  const domeG = new THREE.SphereGeometry(1.09, 36, 20, 0, Math.PI*2, 0, Math.PI*0.44);
+  const dome  = new THREE.Mesh(domeG, hatM);
+  dome.position.y = 0.08;
+  hatGroup.add(dome);
+  // Hat top button/pompon
+  const btnG = new THREE.SphereGeometry(0.09, 10, 10);
+  const btn  = new THREE.Mesh(btnG, new THREE.MeshPhongMaterial({color:0xc084fc, emissive:0x6000cc, emissiveIntensity:.8, shininess:90}));
+  btn.position.y = 1.12;
+  hatGroup.add(btn);
+  // Decorative band
+  const bandG = new THREE.TorusGeometry(1.095, 0.04, 6, 40);
+  const band  = new THREE.Mesh(bandG, new THREE.MeshPhongMaterial({color:0x9933ff, emissive:0x5500aa, emissiveIntensity:.6, shininess:80}));
+  band.rotation.x = Math.PI/2;
+  band.position.y = 0.68;
+  hatGroup.add(band);
+
+  hatGroup.position.set(0, 0.06, -0.04);
+  faceGroup.add(hatGroup);
+  faceGroup._cap    = hatGroup;
+  faceGroup._capMat = hatM; // used for opacity fade
+  // Store all hat materials for dissolve
+  faceGroup._hatMats = [hatM, btn.material, band.material];
+
+  // INNER GLOW
+  const igMat=new THREE.MeshBasicMaterial({color:0x9933ff,transparent:true,opacity:0,side:THREE.BackSide});
+  const ig=new THREE.Mesh(new THREE.SphereGeometry(0.92,24,24,0,Math.PI*2,0,Math.PI*0.43),igMat);
+  ig.position.set(0,0.06,-0.06); faceGroup.add(ig);
+  faceGroup._innerGlow=ig; faceGroup._innerGlowMat=igMat;
+
+  // EYEBROWS  -  natural medium arch
+  [-0.38,0.38].forEach((bx,bi)=>{
+    const s=bi===0?1:-1;
+    const bc=new THREE.CatmullRomCurve3([
+      new THREE.Vector3(bx-s*.20,0.35,0.80),
+      new THREE.Vector3(bx-s*.08,0.41,0.84),
+      new THREE.Vector3(bx+s*.04,0.42,0.84),
+      new THREE.Vector3(bx+s*.17,0.37,0.81),
+    ]);
+    faceGroup.add(new THREE.Mesh(new THREE.TubeGeometry(bc,12,0.030,5,false),
+      new THREE.MeshPhongMaterial({color:C.brow,shininess:8,emissive:0x060300,emissiveIntensity:.3})));
+  });
+
+  // EYES  -  BIG Pixar (1.6x scale, giant iris, catchlight)
+  const EX=0.38,EY=0.08,EZ=0.84;
+  [-EX,EX].forEach((ex,ei)=>{
+    // Sclera
+    const sc=new THREE.Mesh(new THREE.SphereGeometry(0.195,24,24),
+      new THREE.MeshPhongMaterial({color:C.eyeW,shininess:65,specular:0xffffff}));
+    sc.position.set(ex,EY,EZ); sc.scale.set(1,1.05,0.82); faceGroup.add(sc);
+    // Iris
+    const ir=new THREE.Mesh(new THREE.SphereGeometry(0.135,18,18),
+      new THREE.MeshPhongMaterial({color:C.iris,emissive:0x120800,emissiveIntensity:.7,shininess:120,specular:0xffffff}));
+    ir.position.set(ex,EY,EZ+0.10); faceGroup.add(ir);
+    // Pupil
+    const pu=new THREE.Mesh(new THREE.SphereGeometry(0.075,12,12),
+      new THREE.MeshBasicMaterial({color:C.pupil}));
+    pu.position.set(ex,EY,EZ+0.155); faceGroup.add(pu);
+    // Catchlight (Pixar magic sparkle)
+    const cl=new THREE.Mesh(new THREE.SphereGeometry(0.028,8,8),new THREE.MeshBasicMaterial({color:0xffffff}));
+    cl.position.set(ex+0.055,EY+0.065,EZ+0.175); faceGroup.add(cl);
+    const cl2=new THREE.Mesh(new THREE.SphereGeometry(0.013,6,6),new THREE.MeshBasicMaterial({color:0xffffff}));
+    cl2.position.set(ex-0.045,EY-0.04,EZ+0.175); faceGroup.add(cl2);
+  });
+
+  // EYELIDS (start CLOSED, rotation.x=0)
+  [-EX,EX].forEach((ex,ei)=>{
+    const ldG=new THREE.SphereGeometry(0.205,22,12,0,Math.PI*2,0,Math.PI*0.52);
+    const ldM=new THREE.MeshPhongMaterial({color:C.skin,emissive:0x1a0800,emissiveIntensity:.2,side:THREE.DoubleSide,shininess:12});
+    const lid=new THREE.Mesh(ldG,ldM);
+    lid.position.set(ex,EY,EZ-0.02); lid.rotation.x=0; lid.scale.set(1,1.05,0.85);
+    faceGroup.add(lid);
+    if(ei===0) faceGroup._lidL=lid; else faceGroup._lidR=lid;
+  });
+
+  // UPPER LASHES  -  thick Pixar style
+  [-EX,EX].forEach(ex=>{
+    for(let j=0;j<7;j++){
+      const t=j/6; const lx=ex+(t-0.5)*0.36; const fx=ex+(t-0.5)*0.42;
+      const lc=new THREE.QuadraticBezierCurve3(
+        new THREE.Vector3(lx,EY+0.15,EZ+0.06),
+        new THREE.Vector3(fx,EY+0.26,EZ+0.10),
+        new THREE.Vector3(fx*1.04,EY+0.32,EZ+0.06)
+      );
+      faceGroup.add(new THREE.Mesh(new THREE.TubeGeometry(lc,5,0.011,4,false),
+        new THREE.MeshBasicMaterial({color:0x080300})));
+    }
+  });
+  // LOWER LASHES
+  [-EX,EX].forEach(ex=>{
+    for(let j=0;j<5;j++){
+      const lx=ex+(j/4-0.5)*0.28;
+      const lc=new THREE.QuadraticBezierCurve3(
+        new THREE.Vector3(lx,EY-0.15,EZ+0.06),
+        new THREE.Vector3(lx,EY-0.22,EZ+0.09),
+        new THREE.Vector3(lx,EY-0.26,EZ+0.07)
+      );
+      faceGroup.add(new THREE.Mesh(new THREE.TubeGeometry(lc,4,0.007,3,false),
+        new THREE.MeshBasicMaterial({color:0x100500})));
+    }
+  });
+
+  // NOSE  -  Pixar nose with bridge
+  // Nose — deep warm brown-rose, clearly visible on lit face
+  const tipM=new THREE.MeshPhongMaterial({
+    color:0x8a4535,
+    emissive:0x6b2518,emissiveIntensity:.7,
+    shininess:8,specular:0xcc7755
+  });
+  // Nose bridge
+  const nBridge=new THREE.Mesh(new THREE.SphereGeometry(0.038,10,8),tipM);
+  nBridge.position.set(0,0.05,0.965); nBridge.scale.set(1.1,2.2,1.1); faceGroup.add(nBridge);
+  const nMid=new THREE.Mesh(new THREE.SphereGeometry(0.038,10,8),tipM);
+  nMid.position.set(0,-0.06,0.975); nMid.scale.set(1.2,1.3,1.1); faceGroup.add(nMid);
+  // Nose tip
+  const tipN=new THREE.Mesh(new THREE.SphereGeometry(0.072,14,12),tipM);
+  tipN.position.set(0,-0.15,0.985); tipN.scale.set(1.5,1.2,1.2); faceGroup.add(tipN);
+  [-0.062,0.062].forEach(nx=>{
+    const nw=new THREE.Mesh(new THREE.SphereGeometry(0.042,8,8),tipM);
+    nw.position.set(nx,-0.17,0.955); nw.scale.set(1,0.72,0.88); faceGroup.add(nw);
+    const nh=new THREE.Mesh(new THREE.SphereGeometry(0.022,7,7),
+      new THREE.MeshPhongMaterial({color:0x5a2810,shininess:5}));
+    nh.position.set(nx,-0.19,0.965); faceGroup.add(nh);
+  });
+
+  // Dimples
+  [-0.28,0.28].forEach(dx=>{
+    const dc=new THREE.Mesh(new THREE.SphereGeometry(0.028,8,8),mSkin(0xfce4c8,8));
+    dc.position.set(dx,-0.375,0.88); dc.scale.set(0.6,1,0.7); faceGroup.add(dc);
+  });
+  // Teeth
+  const th=new THREE.Mesh(
+    new THREE.SphereGeometry(0.14,12,8,0,Math.PI*2,Math.PI*0.38,Math.PI*0.22),
+    new THREE.MeshPhongMaterial({color:C.teeth,emissive:0x0a0800,emissiveIntensity:.15,shininess:40,specular:0xffffff}));
+  th.position.set(0,-0.41,0.88); th.scale.set(1.7,1,0.6); faceGroup.add(th);
+
+  // EARS
+  [-1.04,1.04].forEach(ex=>{
+    const ear=new THREE.Mesh(new THREE.SphereGeometry(0.21,16,16),mSkin(0xffe8cc,8));
+    ear.position.set(ex,0.02,0.04); ear.scale.set(0.52,1.28,0.68); faceGroup.add(ear);
+  });
+
+  // NECK
+  const nk=new THREE.Mesh(new THREE.CylinderGeometry(0.38,0.42,0.52,22),mSkin());
+  nk.position.set(0,-1.2,-0.04); faceGroup.add(nk);
+
+  faceGroup.position.set(0,0.35,4);
+  faceGroup.scale.setScalar(1.28);
+  // Warm fill light aimed at face  -  makes porcelain skin glow against dark bg
+  const faceKeyLight  = new THREE.PointLight(0xfff0e0, 1.8, 12);
+  faceKeyLight.position.set(0.5, 1.8, 6.5);
+  scene.add(faceKeyLight);
+  const faceRimLight  = new THREE.PointLight(0xc0a0ff, 1.4, 10);
+  faceRimLight.position.set(-2, 0.5, 3.5);
+  scene.add(faceRimLight);
+  faceGroup._keyLight = faceKeyLight;
+  faceGroup._rimLight = faceRimLight;
+})();
+
+// ── BUILD BRAIN ───────────────────────────────────
+// Brain geometry  -  flattened, deformed sphere
+const brainGeo=new THREE.SphereGeometry(3,72,72);
+const brainPos=brainGeo.attributes.position;
+for(let i=0;i<brainPos.count;i++){
+  const x=brainPos.getX(i), y=brainPos.getY(i), z=brainPos.getZ(i);
+  // Flatten top-bottom slightly, add organic ridges
+  const ny=y*.78+Math.sin(x*2.2+z*1.8)*.18+Math.cos(y*3.1+x)*.1;
+  const nx=x+Math.sin(y*1.9+z*2.4)*.16+Math.cos(x*3.3)*.1;
+  const nz=z+Math.sin(x*2.5+y*1.6)*.14+Math.cos(z*2.9+y)*.09;
+  brainPos.setXYZ(i,nx,ny,nz);
+}
+brainGeo.computeVertexNormals();
+
+const brainMat=new THREE.MeshPhongMaterial({
+  color:0x2d1b4e,emissive:0x0d0520,emissiveIntensity:.5,
+  specular:0x9960cc,shininess:28,
+  transparent:true,opacity:.78,
+  side:THREE.DoubleSide
+});
+const brainMesh=new THREE.Mesh(brainGeo,brainMat);
+brainGroup.add(brainMesh);
+
+// Wireframe overlay
+const wfGeo=brainGeo.clone();
+const wfMat=new THREE.MeshBasicMaterial({color:0xb464ff,wireframe:true,transparent:true,opacity:.065});
+brainGroup.add(new THREE.Mesh(wfGeo,wfMat));
+
+// Hemisphere groove (corpus callosum)
+const grooveG=new THREE.TorusGeometry(2.1,.05,8,80);
+const grooveMat=new THREE.MeshBasicMaterial({color:0x050510,transparent:true,opacity:.85});
+const groove=new THREE.Mesh(grooveG,grooveMat);
+groove.rotation.x=Math.PI/2;
+groove.position.y=.2;
+brainGroup.add(groove);
+
+// Sagittal groove (front-back)
+const sGrooveG=new THREE.TorusGeometry(2.1,.04,6,80);
+const sGroove=new THREE.Mesh(sGrooveG,grooveMat.clone());
+sGroove.rotation.z=Math.PI/2;
+sGroove.position.y=.1;
+brainGroup.add(sGroove);
+
+// ── LOBE BUMP ZONES ───────────────────────────────
+const LOBE_BUMPS={};
+Object.values(LOBES).forEach(l=>{
+  const bG=new THREE.SphereGeometry(1.05,20,20);
+  const bM=new THREE.MeshPhongMaterial({
+    color:l.color,
+    emissive:new THREE.Color(l.color).multiplyScalar(.35),
+    transparent:true,opacity:.22,
+    shininess:45,specular:0xffffff
+  });
+  const bump=new THREE.Mesh(bG,bM);
+  bump.position.copy(l.sciPos).multiplyScalar(.78);
+  bump.userData={lobeKey:l.key};
+  brainGroup.add(bump);
+  LOBE_BUMPS[l.key]=bump;
+  l._bump=bump;
+});
+
+// ── NEURON PARTICLES ─────────────────────────────
+const NCNT=600;
+const nGeo=new THREE.BufferGeometry();
+const nPos=new Float32Array(NCNT*3);
+const nData=[];
+for(let i=0;i<NCNT;i++){
+  const theta=Math.random()*Math.PI*2;
+  const phi=Math.acos(2*Math.random()-1);
+  const r=1.4+Math.random()*1.7;
+  nPos[i*3]=r*Math.sin(phi)*Math.cos(theta);
+  nPos[i*3+1]=r*.8*Math.sin(phi)*Math.sin(theta);
+  nPos[i*3+2]=r*Math.sin(phi)*Math.cos(phi+.5);
+  nData.push({r,theta,phi,speed:Math.random()*.006+.002,dPhi:(Math.random()-.5)*.003});
+}
+nGeo.setAttribute('position',new THREE.BufferAttribute(nPos,3));
+const neuronMesh=new THREE.Points(nGeo,new THREE.PointsMaterial({
+  color:0xcc88ff,size:.06,transparent:true,opacity:.65,
+  blending:THREE.AdditiveBlending
+}));
+brainGroup.add(neuronMesh);
+
+// ── SYNAPTIC LINES ────────────────────────────────
+const SYNAPSES=[];
+const lobePositions=Object.values(LOBES).map(l=>l.sciPos.clone().multiplyScalar(.76));
+function makeSynapse(a,b,col){
+  const mid=a.clone().lerp(b,.5);
+  mid.x+=(Math.random()-.5)*.9;
+  mid.y+=(Math.random()-.5)*.7;
+  mid.z+=(Math.random()-.5)*.9;
+  const curve=new THREE.CatmullRomCurve3([a.clone(),mid,b.clone()]);
+  const geo=new THREE.TubeGeometry(curve,14,.016,4,false);
+  const mat=new THREE.MeshBasicMaterial({
+    color:col,transparent:true,opacity:0,
+    blending:THREE.AdditiveBlending
+  });
+  const m=new THREE.Mesh(geo,mat);
+  brainGroup.add(m);
+  SYNAPSES.push({mesh:m,mat,t:Math.random(),speed:Math.random()*.018+.006,baseOpacity:.38});
+}
+// Inter-lobe connections
+const lk=Object.values(LOBES);
+for(let i=0;i<lk.length;i++){
+  for(let j=i+1;j<lk.length;j++){
+    makeSynapse(lk[i].sciPos.clone().multiplyScalar(.76),lk[j].sciPos.clone().multiplyScalar(.76),lk[i].color);
+    makeSynapse(lk[i].sciPos.clone().multiplyScalar(.76),lk[j].sciPos.clone().multiplyScalar(.76),lk[j].color);
+  }
+}
+// Internal random synapses
+for(let s=0;s<16;s++){
+  const ra=()=>new THREE.Vector3((Math.random()-.5)*3.5,(Math.random()-.5)*2.5,(Math.random()-.5)*3.5);
+  makeSynapse(ra(),ra(),0x9966ff);
+}
+
+// ── PROJECT NODES  -  tiny dots half-submerged in brain surface ────────────────
+const NODE_MESHES=[];
+const NODE_DATA={};
+
+// Surface radius per lobe direction
+const LOBE_SURFACE_R={temporal:3.05,frontal:3.2,parietal:2.5,occipital:3.1};
+
+PROJECTS.forEach((proj,idx)=>{
+  const lobe=LOBES[proj.lobe];
+  const lobeDir=lobe.sciPos.clone().normalize();
+  const lobeProjects=PROJECTS.filter(p=>p.lobe===proj.lobe);
+  const li=lobeProjects.indexOf(proj);
+  const total=lobeProjects.length;
+
+  // Build tangent frame on brain surface at lobe direction
+  const worldUp=new THREE.Vector3(0,1,0);
+  const tangent1=new THREE.Vector3().crossVectors(lobeDir,worldUp).normalize();
+  if(tangent1.length()<0.01){ // handle degenerate case (parietal = top)
+    tangent1.set(1,0,0);
+  }
+  const tangent2=new THREE.Vector3().crossVectors(lobeDir,tangent1).normalize();
+
+  // Spread nodes in grid on surface tangent plane
+  const cols=Math.ceil(Math.sqrt(total*1.4));
+  const rows=Math.ceil(total/cols);
+  const row=Math.floor(li/cols), col=li%cols;
+  const spreadW=Math.min(0.9, 0.28*cols); // adapt to count
+  const spreadH=Math.min(0.7, 0.28*rows);
+  const ox=(cols>1?(col/(cols-1)-0.5):0)*spreadW*2;
+  const oy=(rows>1?(row/(rows-1)-0.5):0)*spreadH*2;
+
+  const surfR=LOBE_SURFACE_R[proj.lobe]||3.0;
+  // Half-submerged: center of node sits RIGHT at the surface
+  const nodePos=lobeDir.clone()
+    .multiplyScalar(surfR)          // exactly at surface
+    .add(tangent1.clone().multiplyScalar(ox))
+    .add(tangent2.clone().multiplyScalar(oy));
+
+  // TINY sphere  -  radius 0.065 (half pokes out, half in)
+  const nGe=new THREE.SphereGeometry(isMobileDevice?0.13:0.065,10,10);
+  const nMa=new THREE.MeshPhongMaterial({
+    color:lobe.color,
+    emissive:new THREE.Color(lobe.color).multiplyScalar(0.9),
+    emissiveIntensity:1.2,
+    transparent:true,opacity:0.9,
+    shininess:100,specular:0xffffff
+  });
+  const node=new THREE.Mesh(nGe,nMa);
+  node.position.copy(nodePos);
+  node.scale.set(1,1,1);
+  node.userData={projId:proj.id,lobeKey:proj.lobe};
+  nodeGroup.add(node);
+
+  // Small glow halo (flat ring facing outward from surface)
+  const gGe=new THREE.CircleGeometry(0.13,16);
+  const gMa=new THREE.MeshBasicMaterial({
+    color:lobe.color,transparent:true,opacity:0.22,
+    side:THREE.DoubleSide,blending:THREE.AdditiveBlending
+  });
+  const glow=new THREE.Mesh(gGe,gMa);
+  glow.position.copy(nodePos).addScaledVector(lobeDir,0.02);
+  glow.lookAt(nodePos.clone().addScaledVector(lobeDir,1));
+  nodeGroup.add(glow);
+
+  // Pulse sphere (outer glow aura)
+  const pGe=new THREE.SphereGeometry(0.11,8,8);
+  const pMa=new THREE.MeshBasicMaterial({
+    color:lobe.color,transparent:true,opacity:0,
+    blending:THREE.AdditiveBlending,side:THREE.BackSide
+  });
+  const pulse=new THREE.Mesh(pGe,pMa);
+  pulse.position.copy(nodePos);
+  nodeGroup.add(pulse);
+
+  const data={mesh:node,glow,pulse,project:proj,basePos:nodePos.clone(),lobeDir:lobeDir.clone(),phase:Math.random()*Math.PI*2};
+  NODE_MESHES.push(data);
+  NODE_DATA[proj.id]=data;
+});
+
+// ═══════════════════════════════════════════════════════════
+// APP STATE
+// ═══════════════════════════════════════════════════════════
+// Increase raycaster precision for tiny nodes
+const raycasterParams = new THREE.Raycaster();
+raycasterParams.params.Points={threshold:0.1};
+
+const App={
+  state:'loading', // loading | intro | brain | lobe | panel
+  activeLobe:null,
+  hoveredLobe:null,
+  hoveredNode:null,
+  panelOpen:false,
+  mouse:new THREE.Vector2(-999,-999),
+  raycaster:(()=>{const r=new THREE.Raycaster();r.params.Mesh={};return r;})(),
+  mouseScreen:{x:0,y:0},
+  brainRotX:0,brainRotY:0,
+  targetRotX:0,targetRotY:0,
+  isMobile:window.innerWidth<700,
+
+  // ── INTRO ────────────────────────────────────────
+  async runIntro(){
+    const ld=document.getElementById('loading');
+    await App.delay(600);
+    ld.classList.add('fade');
+    await App.delay(1000);
+
+    // Show face
+    faceGroup.visible=true;
+    gsap.fromTo(faceGroup.scale,{x:0,y:0,z:0},{x:1.35,y:1.35,z:1.35,duration:.9,ease:'back.out(1.6)'});
+    // Eyes start closed (lidL/R rotation.x=0 = closed)
+    faceGroup._lidL.rotation.x=0;
+    faceGroup._lidR.rotation.x=0;
+    await App.delay(700);
+    // Blink open
+    gsap.to([faceGroup._lidL.rotation,faceGroup._lidR.rotation],{x:Math.PI*.55,duration:.9,ease:'power2.inOut'});
+    // Subtle camera track
+    gsap.to(camera.position,{y:.8,duration:1.5,ease:'sine.inOut'});
+    await App.delay(1200);
+
+    // Typewriter  -  dim face slightly so text is readable
+    gsap.to(faceGroup.children,{opacity:.6,duration:.5});
+    const tw=document.getElementById('typewriter');
+    const sub=document.getElementById('intro-sub');
+    // sub hidden (USC removed per request)
+    const lines=["Hi, I'm Vidhi.","I build experiences, not just screens.","Let me show you how I think."];
+    for(const line of lines){
+      tw.style.opacity=1;
+      await App.type(tw,line,52);
+      await App.delay(900);
+      gsap.to(tw,{opacity:0,duration:.35});
+      await App.delay(500);
+    }
+    await App.delay(400);
+
+    // Sub fade out
+    gsap.to(sub,{opacity:0,duration:.4});
+
+    // Hat lifts straight off the head  -  floats up, then fades away
+    gsap.to(faceGroup._cap.position,{y:5.5,duration:1.2,ease:'power2.inOut'});
+    // Fade all hat materials
+    faceGroup._hatMats.forEach(m=>{
+      m.transparent=true;
+      gsap.to(m,{opacity:0,duration:0.65,delay:0.6,ease:'power2.in'});
+    });
+    // Inner glow floods up as hat lifts
+    gsap.fromTo(faceGroup._innerGlowMat,{opacity:0},{opacity:.72,duration:.85,delay:.35,ease:'power2.out'});
+    await App.delay(900);
+
+    // Camera zooms INTO the skull
+    gsap.to(camera.position,{x:0,y:1.3,z:2.8,duration:1.3,ease:'power2.inOut'});
+    await App.delay(900);
+
+    // Fade out face, show brain
+    gsap.to(faceGroup.scale,{x:0,y:0,z:0,duration:.55,ease:'power2.in'});
+    await App.delay(350);
+    faceGroup.visible=false;
+    brainGroup.visible=true;
+    brainGroup.scale.set(.01,.01,.01);
+    gsap.to(brainGroup.scale,{x:1,y:1,z:1,duration:.8,ease:'back.out(1.4)'});
+
+    // Camera to brain view
+    gsap.to(camera.position,{x:0,y:1.5,z:10,duration:1.15,ease:'power2.out'});
+    // Reveal all nodes as glowing neuron dots across the brain
+    nodeGroup.visible=true;
+    NODE_MESHES.forEach(nd=>{
+      nd.mesh.material.opacity=0.75;
+      gsap.to(nd.mesh.scale,{x:1,y:1,z:1,duration:.7,delay:.2+Math.random()*.6,ease:'back.out(1.8)'});
+      gsap.to(nd.glow.material,{opacity:0.28,duration:.6,delay:.4+Math.random()*.4});
+    });
+    await App.delay(700);
+
+    // Lobe pulse sequence  -  light each lobe one at a time
+    const lobeKeys=['temporal','frontal','parietal','occipital'];
+    for(const k of lobeKeys){
+      const pl=LOBE_LIGHTS[k];
+      const bump=LOBE_BUMPS[k];
+      gsap.to(pl,{intensity:5,duration:.3,yoyo:true,repeat:1});
+      gsap.to(bump.material,{opacity:.65,duration:.3,yoyo:true,repeat:1});
+      await App.delay(320);
+    }
+    await App.delay(400);
+
+    // Show UI + hint
+    document.getElementById('ui').classList.add('show');
+    App.state='brain';
+
+    // Check hash for direct-link routing
+    App.checkHash();
+  },
+
+  // ── HASH ROUTING ─────────────────────────────────
+  checkHash(){
+    const h=window.location.hash.replace('#','');
+    if(!h) return;
+    const lobeKey=HASH_MAP[h];
+    if(!lobeKey) return;
+    const lobe=LOBES[lobeKey];
+    const banner=document.getElementById('hash-banner');
+    banner.textContent='Viewing: '+lobe.section;
+    banner.style.color=lobe.hex;
+    banner.style.borderColor=lobe.hex+'44';
+    banner.classList.add('show');
+    setTimeout(()=>App.zoomToLobe(lobeKey),300);
+  },
+
+  jumpHash(hash){
+    const lobeKey=HASH_MAP[hash];
+    if(!lobeKey) return;
+    // On mobile skip hash change (prevents scroll/reload issues)
+    if(window.innerWidth>700) window.location.hash=hash;
+    App.zoomToLobe(lobeKey);
+  },
+
+  // ── ZOOM TO LOBE ─────────────────────────────────
+  zoomToLobe(lobeKey){
+    if(App.state==='panel') App.closePanel();
+    App.activeLobe=lobeKey;
+    App.state='lobe';
+    const lobe=LOBES[lobeKey];
+    document.getElementById('center-hint').classList.add('hide');
+    document.getElementById('back-btn').classList.add('show');
+
+    // Zone label
+    const zl=document.getElementById('zone-label');
+    document.getElementById('zl-eye').textContent='Region active  -  '+lobe.label;
+    document.getElementById('zl-tit').textContent=lobe.section;
+    document.getElementById('zl-eye').style.color=lobe.hex;
+    zl.classList.add('show');
+
+    // Dim other lobes, illuminate active
+    Object.entries(LOBE_LIGHTS).forEach(([k,pl])=>{
+      gsap.to(pl,{intensity:k===lobeKey?4.5:.12,duration:.7});
+    });
+    Object.entries(LOBE_BUMPS).forEach(([k,b])=>{
+      gsap.to(b.material,{opacity:k===lobeKey?.55:.06,duration:.7});
+    });
+    gsap.to(brainMat,{opacity:.45,duration:.7});
+    gsap.to(wfMat,{opacity:.03,duration:.7});
+
+    // Camera zoom toward lobe
+    const lp=lobe.sciPos.clone().normalize();
+    const cPos={
+      x:lp.x*6.5,
+      y:lp.y*4+2.5,
+      z:lp.z*5.5+4.5
+    };
+    gsap.to(camera.position,{x:cPos.x,y:cPos.y,z:cPos.z,duration:1.15,ease:'power2.inOut'});
+    camLookAtTarget.copy(lobe.sciPos.clone().multiplyScalar(.78));
+
+    // Active lobe nodes → full size glowing neurons; others → small ambient
+    nodeGroup.visible=true;
+    NODE_MESHES.forEach(nd=>{
+      const show=nd.project.lobe===lobeKey;
+      nd.mesh.material.opacity = show ? 1.0 : 0.6;
+      gsap.to(nd.mesh.scale,{
+        x:1, y:1, z:1,
+        duration:.5, delay:show?(.3+Math.random()*.35):0,
+        ease:'back.out(2)'
+      });
+      gsap.to(nd.glow.material,{opacity:show?.55:0.08,duration:.4});
+      gsap.to(nd.pulse.material,{opacity:show?.14:0,duration:.5});
+    });
+
+    // Update nav active states
+    document.querySelectorAll('.tb-btn').forEach(b=>b.style.fontWeight='400');
+    const map={temporal:'.btn-xr',frontal:'.btn-prod',parietal:'.btn-int',occipital:'.btn-story'};
+    const btn=document.querySelector(map[lobeKey]);
+    if(btn) btn.style.fontWeight='700';
+  },
+
+  // ── RESET ─────────────────────────────────────────
+  resetBrain(){
+    if(App.state==='loading'||App.state==='intro') return;
+    App.closePanel(true);
+    App.activeLobe=null;
+    App.hoveredLobe=null;
+    App.state='brain';
+
+    document.getElementById('center-hint').classList.remove('hide');
+    document.getElementById('back-btn').classList.remove('show');
+    document.getElementById('hash-banner').classList.remove('show');
+    document.getElementById('zone-label').classList.remove('show');
+    document.querySelectorAll('.tb-btn').forEach(b=>b.style.fontWeight='400');
+    window.location.hash='';
+
+    Object.entries(LOBE_LIGHTS).forEach(([k,pl])=>{
+      gsap.to(pl,{intensity:LOBES[k]._baseIntensity,duration:.65});
+    });
+    Object.entries(LOBE_BUMPS).forEach(([k,b])=>{
+      gsap.to(b.material,{opacity:.22,duration:.65});
+    });
+    gsap.to(brainMat,{opacity:.78,duration:.65});
+    gsap.to(wfMat,{opacity:.065,duration:.65});
+    gsap.to(camera.position,{x:0,y:1.5,z:10,duration:1.1,ease:'power2.inOut'});
+    camLookAtTarget.set(0,0,0);
+
+    // Brain overview  -  all nodes as small glowing neuron dots
+    nodeGroup.visible=true;
+    NODE_MESHES.forEach(nd=>{
+      nd.mesh.material.opacity=0.75;
+      gsap.to(nd.mesh.scale,{x:1,y:1,z:1,duration:.5,delay:Math.random()*.3,ease:'back.out(1.5)'});
+      gsap.to(nd.glow.material,{opacity:0.25,duration:.4});
+      nd.pulse.material.opacity=0;
+    });
+    App.hideTooltip();
+    App.hideNodeLabel();
+  },
+
+  // ── PANEL ─────────────────────────────────────────
+  openPanel(projId){
+    const nd=NODE_DATA[projId];
+    if(!nd) return;
+    const proj=nd.project;
+    const lobe=LOBES[proj.lobe];
+    App.panelOpen=true;
+    App.state='panel';
+
+    // Badge
+    const pill=document.getElementById('p-lobe-pill');
+    pill.textContent=lobe.label+'  -  '+lobe.section;
+    pill.style.background=`rgba(${lobe.rgb},.15)`;
+    pill.style.borderColor=`rgba(${lobe.rgb},.45)`;
+    pill.style.color=lobe.hex;
+
+    document.getElementById('p-name').textContent=proj.name;
+
+    const st=document.getElementById('p-status');
+    st.className='';
+    if(proj.status==='current'){
+      st.className='current';
+      st.innerHTML='★&nbsp; Current Role';
+    } else if(proj.status==='dev'){
+      st.className='dev';
+      st.innerHTML='⚙️&nbsp; In Development';
+    } else {
+      st.className='done';
+      st.innerHTML='✓&nbsp; Completed';
+    }
+
+    document.getElementById('p-desc').textContent=proj.desc;
+
+    const skills=document.getElementById('p-skills');
+    skills.innerHTML='';
+    proj.skills.forEach(s=>{
+      const sp=document.createElement('span');
+      sp.className='skill-pill';
+      sp.textContent=s;
+      sp.style.background=`rgba(${lobe.rgb},.12)`;
+      sp.style.borderColor=`rgba(${lobe.rgb},.4)`;
+      sp.style.color=lobe.hex;
+      skills.appendChild(sp);
+    });
+
+    const link=document.getElementById('p-view-link');
+    link.href=proj.url;
+    link.setAttribute('data-url', proj.url);
+    link.style.borderColor=lobe.hex+'80';
+    link.style.color=lobe.hex;
+    // Direct navigation onclick — most reliable on mobile Safari/Chrome
+    link.onclick=function(e){
+      e.stopPropagation();
+      var url=this.getAttribute('data-url');
+      if(url&&url!=='#'){window.location.href=url;}
+      return false;
+    };
+
+    const lobeLink=document.getElementById('p-lobe-link');
+    lobeLink.href=lobe.url;
+    lobeLink.textContent='View all '+lobe.section+' projects →';
+    lobeLink.style.color=`rgba(${lobe.rgb},.45)`;
+    lobeLink.onclick=function(e){
+      e.stopPropagation();
+      var url=this.href;
+      if(url&&url!==window.location.href){window.location.href=url;}
+      return false;
+    };
+
+
+    document.getElementById('panel').classList.add('open');
+    document.body.classList.add('pointer');
+  },
+
+  closePanel(silent){
+    App.panelOpen=false;
+    document.getElementById('panel').classList.remove('open');
+    document.body.classList.remove('pointer');
+    if(!silent && App.activeLobe) App.state='lobe';
+    else if(!silent) App.state='brain';
+    App.hideNodeLabel();
+  },
+
+  // ── TOOLTIP ──────────────────────────────────────
+  showLobeTooltip(lobeKey,x,y){
+    const l=LOBES[lobeKey];
+    document.getElementById('tt-name').textContent=l.label;
+    document.getElementById('tt-name').style.color=l.hex;
+    document.getElementById('tt-sci').textContent=l.tooltip;
+    document.getElementById('tt-sec').textContent='→ '+l.section;
+    document.getElementById('tt-sec').style.color=l.hex;
+    App._positionEl(document.getElementById('tooltip'),x,y,280,130);
+    gsap.to(document.getElementById('tooltip'),{opacity:1,duration:.2});
+  },
+  hideTooltip(){gsap.to(document.getElementById('tooltip'),{opacity:0,duration:.15});},
+
+  showNodeLabel(proj,x,y){
+    const nl=document.getElementById('node-label');
+    nl.textContent=proj.name;
+    nl.style.color=LOBES[proj.lobe].hex;
+    nl.style.borderColor=LOBES[proj.lobe].hex+'44';
+    App._positionEl(nl,x,y,210,50);
+    gsap.to(nl,{opacity:1,duration:.18});
+  },
+  hideNodeLabel(){gsap.to(document.getElementById('node-label'),{opacity:0,duration:.15});},
+
+  _positionEl(el,mx,my,w,h){
+    let x=mx+16, y=my-h-10;
+    if(x+w>window.innerWidth) x=mx-w-16;
+    if(y<8) y=my+16;
+    if(y+h>window.innerHeight) y=window.innerHeight-h-8;
+    el.style.left=x+'px'; el.style.top=y+'px';
+  },
+
+  // ── UTILS ─────────────────────────────────────────
+  delay:ms=>new Promise(r=>setTimeout(r,ms)),
+  type(el,text,spd){
+    return new Promise(res=>{
+      let i=0; el.style.opacity=1; el.textContent='';
+      const id=setInterval(()=>{
+        el.textContent=text.slice(0,++i);
+        if(i>=text.length){clearInterval(id);setTimeout(res,200);}
+      },spd);
+    });
+  }
+};
+window.App=App;
+
+// ═══════════════════════════════════════════════════════════
+// INPUT
+// ═══════════════════════════════════════════════════════════
+// ── DRAG TO ROTATE ───────────────────────────────────────────
+let isDragging=false, dragStartX=0, dragStartY=0;
+let dragRotX=0, dragRotY=0;
+let lastDragX=0, lastDragY=0;
+let dragVelX=0, dragVelY=0;
+
+window.addEventListener('mousedown',e=>{
+  if(e.target.closest('#panel')||e.target.closest('#topbar')) return;
+  if(App.state==='brain'||App.state==='lobe'||App.state==='panel'){
+    isDragging=true;
+    dragStartX=e.clientX; dragStartY=e.clientY;
+    lastDragX=e.clientX; lastDragY=e.clientY;
+    dragVelX=0; dragVelY=0;
+    document.body.style.cursor='grabbing';
+  }
+});
+
+window.addEventListener('mousemove',e=>{
+  App.mouseScreen.x=e.clientX;
+  App.mouseScreen.y=e.clientY;
+  App.mouse.x=(e.clientX/W())*2-1;
+  App.mouse.y=-(e.clientY/H())*2+1;
+
+  if(isDragging){
+    const dx=e.clientX-lastDragX;
+    const dy=e.clientY-lastDragY;
+    dragVelX=dx; dragVelY=dy;
+    dragRotY+=dx*0.008;
+    dragRotX+=dy*0.006;
+    dragRotX=Math.max(-Math.PI*0.45,Math.min(Math.PI*0.45,dragRotX));
+    lastDragX=e.clientX; lastDragY=e.clientY;
+    App.brainRotY=dragRotY;
+    App.brainRotX=dragRotX;
+  } else {
+    // Gentle mouse-follow when not dragging
+    App.targetRotY=(e.clientX/W()-.5)*.12;
+    App.targetRotX=-(e.clientY/H()-.5)*.08;
+  }
+});
+
+window.addEventListener('mouseup',e=>{
+  if(isDragging){
+    isDragging=false;
+    document.body.style.cursor='default';
+    // Momentum: carry drag velocity forward
+    const momentumTick=()=>{
+      dragVelX*=0.92; dragVelY*=0.92;
+      dragRotY+=dragVelX*0.004;
+      dragRotX+=dragVelY*0.003;
+      if(Math.abs(dragVelX)>0.1||Math.abs(dragVelY)>0.1) requestAnimationFrame(momentumTick);
+    };
+    requestAnimationFrame(momentumTick);
+  }
+});
+
+// Touch drag
+let touchStartX=0,touchStartY=0,lastTouchX=0,lastTouchY=0;
+// ── Mobile auto-rotate + tap vs drag ──────────────────────────
+var mobileAutoRotate=true, mobileInactivityTimer=null, touchMoved=false;
+function resetMobileAutoRotate(){
+  mobileAutoRotate=false;
+  if(mobileInactivityTimer) clearTimeout(mobileInactivityTimer);
+  mobileInactivityTimer=setTimeout(function(){ mobileAutoRotate=true; },10000);
+}
+
+window.addEventListener('touchstart',function(e){
+  if(e.target.closest('#topbar')||e.target.closest('#mobile-nav')||
+     e.target.closest('#chatbot')||e.target.closest('#modal-overlay')||
+     e.target.closest('#panel')) { isDragging=false; return; }
+  var t=e.touches[0];
+  App.mouse.x=(t.clientX/W())*2-1;
+  App.mouse.y=-(t.clientY/H())*2+1;
+  App.mouseScreen.x=t.clientX; App.mouseScreen.y=t.clientY;
+  touchStartX=t.clientX; touchStartY=t.clientY;
+  lastTouchX=t.clientX; lastTouchY=t.clientY;
+  touchMoved=false; isDragging=true;
+  resetMobileAutoRotate();
+},{passive:true});
+
+window.addEventListener('touchmove',function(e){
+  if(e.target.closest('#topbar')||e.target.closest('#mobile-nav')||
+     e.target.closest('#chatbot')||e.target.closest('#modal-overlay')||
+     e.target.closest('#panel')) return;
+  var t=e.touches[0];
+  App.mouse.x=(t.clientX/W())*2-1;
+  App.mouse.y=-(t.clientY/H())*2+1;
+  var dx=t.clientX-lastTouchX, dy=t.clientY-lastTouchY;
+  if(Math.abs(t.clientX-touchStartX)>6||Math.abs(t.clientY-touchStartY)>6) touchMoved=true;
+  dragRotY+=dx*0.009; dragRotX+=dy*0.007;
+  dragRotX=Math.max(-Math.PI*0.45,Math.min(Math.PI*0.45,dragRotX));
+  lastTouchX=t.clientX; lastTouchY=t.clientY;
+  App.brainRotY=dragRotY; App.brainRotX=dragRotX;
+},{passive:true});
+
+window.addEventListener('click',e=>{
+  if(e.target.closest('#panel')||e.target.closest('#topbar')||
+     e.target.id==='back-btn'||e.target.closest('#hash-banner')) return;
+  if(App.state==='loading'||App.state==='intro') return;
+
+  App.raycaster.setFromCamera(App.mouse,camera);
+
+  // Node hit  -  clickable in any brain/lobe state
+  if(App.state==='brain'||App.state==='lobe'||App.state==='panel'){
+    const visible=NODE_MESHES.filter(n=>n.mesh.scale.x>.2).map(n=>n.mesh);
+    if(visible.length){
+      const hits=App.raycaster.intersectObjects(visible);
+      if(hits.length>0){
+        App.openPanel(hits[0].object.userData.projId);
+        return;
+      }
+    }
+  }
+
+  // Lobe hit
+  if(App.state==='brain'||App.state==='lobe'){
+    const bumps=Object.values(LOBE_BUMPS);
+    const hits=App.raycaster.intersectObjects(bumps);
+    if(hits.length>0){
+      const k=hits[0].object.userData.lobeKey;
+      App.zoomToLobe(k);
+      return;
+    }
+    // Click empty space = reset
+    if(App.state==='lobe') App.resetBrain();
+  }
+  if(App.state==='panel'){
+    const hits=App.raycaster.intersectObjects(Object.values(LOBE_BUMPS));
+    if(hits.length===0) App.closePanel();
+  }
+});
+
+// Touch support
+window.addEventListener('touchend',function(e){
+  isDragging=false;
+  // Let browser handle taps on UI elements natively (links, buttons, inputs)
+  if(e.target.closest('#topbar')||e.target.closest('#mobile-nav')||
+     e.target.closest('#chatbot')||e.target.closest('#modal-overlay')||
+     e.target.closest('#modal-box')) return;
+  // Panel taps: let browser handle natively (links, close button)
+  if(e.target.closest('#panel')) return;
+  if(touchMoved||App.state==='loading'||App.state==='intro') return;
+  var t=e.changedTouches[0];
+  App.mouse.x=(t.clientX/W())*2-1;
+  App.mouse.y=-(t.clientY/H())*2+1;
+  App.raycaster.setFromCamera(App.mouse,camera);
+  // Tap on project node — widen search on mobile by testing nearby offsets
+  if(App.state==='brain'||App.state==='lobe'||App.state==='panel'){
+    var vis=NODE_MESHES.filter(function(n){return n.mesh.scale.x>.2;}).map(function(n){return n.mesh;});
+    if(vis.length){
+      // Try original position + 8 nearby offsets for fat-finger tolerance
+      var offsets=[[0,0],[.04,0],[-.04,0],[0,.04],[0,-.04],[.04,.04],[-.04,-.04],[.04,-.04],[-.04,.04]];
+      var hitProj=null;
+      for(var oi=0;oi<offsets.length&&!hitProj;oi++){
+        var tm=new THREE.Vector2(App.mouse.x+offsets[oi][0],App.mouse.y+offsets[oi][1]);
+        App.raycaster.setFromCamera(tm,camera);
+        var nh=App.raycaster.intersectObjects(vis);
+        if(nh.length>0) hitProj=nh[0].object.userData.projId;
+      }
+      App.raycaster.setFromCamera(App.mouse,camera);
+      if(hitProj){App.openPanel(hitProj);return;}
+    }
+  }
+  // Tap on lobe
+  if(App.state==='brain'||App.state==='lobe'){
+    var lb=Object.values(LOBE_BUMPS);
+    var lh=App.raycaster.intersectObjects(lb);
+    if(lh.length>0){App.zoomToLobe(lh[0].object.userData.lobeKey);return;}
+    if(App.state==='lobe') App.resetBrain();
+  }
+  if(App.state==='panel'){
+    var ph=App.raycaster.intersectObjects(Object.values(LOBE_BUMPS));
+    if(ph.length===0) App.closePanel();
+  }
+},{passive:true});
+
+// ═══════════════════════════════════════════════════════════
+// RENDER LOOP
+// ═══════════════════════════════════════════════════════════
+let time=0;
+const clock=new THREE.Clock();
+
+function animate(){
+  requestAnimationFrame(animate);
+  const dt=Math.min(clock.getDelta(),.033);
+  time+=dt;
+
+  // Brain rotation  -  drag overrides mouse-follow
+  if(App.state==='brain'||App.state==='lobe'||App.state==='panel'){
+    if(!isDragging){
+      if(!App.isMobile){
+        // Gentle mouse-follow drift when not dragging
+        dragRotY+=(App.targetRotY-dragRotY)*.025;
+        dragRotX+=(App.targetRotX-dragRotX)*.025;
+      } else {
+        if(mobileAutoRotate) dragRotY+=.004;
+      }
+    }
+    App.brainRotY=dragRotY;
+    App.brainRotX=dragRotX;
+    brainGroup.rotation.y=App.brainRotY;
+    brainGroup.rotation.x=App.brainRotX;
+  }
+
+  // Camera look-at smooth
+  camLookAt.lerp(camLookAtTarget,.04);
+  camera.lookAt(camLookAt);
+
+  // Neuron particles orbit
+  const np=neuronMesh.geometry.attributes.position;
+  for(let i=0;i<NCNT;i++){
+    const d=nData[i];
+    d.theta+=d.speed;
+    d.phi+=d.dPhi;
+    const r=d.r+Math.sin(time*.8+i*.22)*.12;
+    np.setXYZ(i,
+      r*Math.sin(d.phi)*Math.cos(d.theta),
+      r*.8*Math.cos(d.phi),
+      r*Math.sin(d.phi)*Math.sin(d.theta)
+    );
+  }
+  np.needsUpdate=true;
+
+  // Synapse pulse
+  SYNAPSES.forEach(s=>{
+    s.t+=s.speed;
+    if(s.t>1) s.t=0;
+    s.mat.opacity=Math.sin(s.t*Math.PI)*s.baseOpacity;
+  });
+
+  // Lobe light pulse (subtle breathing)
+  Object.entries(LOBE_LIGHTS).forEach(([k,pl])=>{
+    const l=LOBES[k];
+    const isActive=App.activeLobe===k;
+    const isHovered=App.hoveredLobe===k;
+    let base=isActive?4.5:(isHovered?3.2:l._baseIntensity);
+    pl.intensity=base+Math.sin(time*2.5+['temporal','frontal','parietal','occipital'].indexOf(k)*.8)*.18;
+  });
+
+  // Project node float + glow pulse
+  NODE_MESHES.forEach(nd=>{
+    if(nd.mesh.scale.x<.05) return;
+    const bob=Math.sin(time*1.6+nd.phase)*.055;
+    nd.mesh.position.y=nd.basePos.y+bob;
+    nd.glow.position.copy(nd.mesh.position);
+    nd.glow.lookAt(camera.position);
+    nd.pulse.position.copy(nd.mesh.position);
+    const ps=1+Math.sin(time*2.2+nd.phase)*.2;
+    nd.pulse.scale.set(ps,ps,ps);
+  });
+
+  // Raycasting hover  -  ONLY when brain/lobe state
+  if(App.state==='brain'||App.state==='lobe'){
+    App.raycaster.setFromCamera(App.mouse,camera);
+
+    // Check nodes  -  hover works on ALL visible nodes regardless of lobe
+    if(true){
+      const vis=NODE_MESHES.filter(n=>n.mesh.scale.x>.2);
+      const hits=App.raycaster.intersectObjects(vis.map(n=>n.mesh));
+      if(hits.length>0){
+        const hObj=hits[0].object;
+        const projId=hObj.userData.projId;
+        if(App.hoveredNode!==projId){
+          // Un-hover old
+          if(App.hoveredNode){
+            const old=NODE_DATA[App.hoveredNode];
+            if(old) gsap.to(old.mesh.scale,{x:1,y:1,z:1,duration:.2});
+          }
+          App.hoveredNode=projId;
+          gsap.to(hObj.scale,{x:2.8,y:2.8,z:2.8,duration:.22,ease:'back.out(2)'});
+          App.showNodeLabel(NODE_DATA[projId].project,App.mouseScreen.x,App.mouseScreen.y);
+          document.body.classList.add('pointer');
+        } else {
+          // Update label position
+          App._positionEl(document.getElementById('node-label'),App.mouseScreen.x,App.mouseScreen.y,210,50);
+        }
+      } else {
+        if(App.hoveredNode){
+          const old=NODE_DATA[App.hoveredNode];
+          if(old) gsap.to(old.mesh.scale,{x:1,y:1,z:1,duration:.2});
+          App.hoveredNode=null;
+          App.hideNodeLabel();
+          document.body.classList.remove('pointer');
+        }
+      }
+    } else {
+      // Check lobe bumps
+      const bumpList=Object.values(LOBE_BUMPS);
+      const hits=App.raycaster.intersectObjects(bumpList);
+      if(hits.length>0){
+        const k=hits[0].object.userData.lobeKey;
+        if(App.hoveredLobe!==k){
+          if(App.hoveredLobe) gsap.to(LOBE_LIGHTS[App.hoveredLobe],{intensity:LOBES[App.hoveredLobe]._baseIntensity,duration:.3});
+          App.hoveredLobe=k;
+          gsap.to(LOBE_BUMPS[k].material,{opacity:.5,duration:.25});
+        }
+        App.showLobeTooltip(k,App.mouseScreen.x,App.mouseScreen.y);
+        document.body.classList.add('pointer');
+      } else {
+        if(App.hoveredLobe){
+          gsap.to(LOBE_BUMPS[App.hoveredLobe].material,{opacity:.22,duration:.3});
+          App.hoveredLobe=null;
+          document.body.classList.remove('pointer');
+        }
+        App.hideTooltip();
+      }
+    }
+  }
+
+  renderer.render(scene,camera);
+}
+
+// ── RESIZE ────────────────────────────────────────
+window.addEventListener('resize',()=>{
+  App.isMobile=window.innerWidth<700;
+  camera.aspect=W()/H();
+  camera.updateProjectionMatrix();
+  renderer.setSize(W(),H());
+});
+
+// ── BOOT ──────────────────────────────────────────
+// Scale all project nodes to 0 initially
+NODE_MESHES.forEach(nd=>{nd.mesh.scale.set(1,1,1);nd.mesh.material.opacity=0.9;nd.glow.material.opacity=0.22;nd.pulse.material.opacity=0;});
+brainGroup.visible=false;
+faceGroup.visible=false;
+nodeGroup.visible=true;
+App.state='loading';
+animate();
+setTimeout(()=>App.runIntro(),500);
+
+
+
+
+// ── MOBILE NAV ────────────────────────────────────────────────────
+function toggleMobileNav(){
+  var nav=document.getElementById('mobile-nav');
+  var ham=document.getElementById('hamburger');
+  var isOpen=nav.classList.contains('open');
+  if(isOpen){ nav.classList.remove('open'); ham.classList.remove('open'); }
+  else       { nav.classList.add('open');   ham.classList.add('open');    }
+}
+function closeMobileNav(){
+  document.getElementById('mobile-nav').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+window.toggleMobileNav=toggleMobileNav;
+window.closeMobileNav=closeMobileNav;
+
+// Adapt hint text for touch devices
+if('ontouchstart' in window || navigator.maxTouchPoints > 0){
+  var hint = document.querySelector('#center-hint p');
+  if(hint) hint.textContent = 'Tap a lobe to explore  ·  Drag to rotate';
+}
+
+// Close mobile nav on canvas tap
+document.getElementById('c').addEventListener('touchstart',closeMobileNav,{passive:true});
+
+// ═══════════════════════════════════════════════════════════
+// ABOUT / CONTACT MODAL
+// ═══════════════════════════════════════════════════════════
+
+// Close mobile nav on canvas tap
+document.getElementById('c').addEventListener('touchstart',closeMobileNav,{passive:true});
+
+// Move modal-overlay to document.body immediately so it's never
+// blocked by #ui pointer-events:none on any device
+(function() {
+  var mo = document.getElementById('modal-overlay');
+  if (mo && mo.parentElement !== document.body) {
+    document.body.appendChild(mo);
+  }
+})();
+
+var Modal = {
+  currentTab: 'about',
+  open: function(tab) {
+    // Close mobile nav first so it doesn't sit on top
+    if (typeof closeMobileNav === 'function') closeMobileNav();
+    this.switchTab(tab || 'about');
+    var overlay = document.getElementById('modal-overlay');
+    // Ensure it's a direct child of body (z-index works correctly)
+    if (overlay.parentElement !== document.body) document.body.appendChild(overlay);
+    overlay.classList.add('open');
+    // Prevent body scroll while modal is open
+    document.body.style.overflow = 'hidden';
+  },
+  close: function() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  },
+  switchTab: function(tab) {
+    this.currentTab = tab;
+    ['about','contact'].forEach(function(t) {
+      document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+      document.getElementById('pane-' + t).classList.toggle('active', t === tab);
+    });
+  }
+};
+window.Modal = Modal;
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') { Modal.close(); }
+});
+
+// ═══════════════════════════════════════════════════════════
+// CHATBOT  -  keyword matcher → brain lobe navigator
+// ═══════════════════════════════════════════════════════════
+const Chat = {
+  open: false,
+  msgCount: 0,
+
+  INDEX: (function() {
+    var idx = [];
+    PROJECTS.forEach(function(p) {
+      var aliases = [];
+      if (p.lobe === 'temporal')  aliases = ['vr','ar','xr','unity','immersive','game','spatial','mixed reality','audio','interactive','experience'];
+      if (p.lobe === 'frontal')   aliases = ['product','furniture','industrial','design','wardrobe','modular','patent','art','generative','p5js'];
+      if (p.lobe === 'parietal')  aliases = ['interior','office','space','architecture','heritage','sustainable','building','3d','environment'];
+      if (p.lobe === 'occipital') aliases = ['podcast','film','video','story','media','ad','advertisement','screenplay','storytelling','content','alexa'];
+      var words = [
+        p.name, p.desc || '', (p.skills || []).join(' '),
+        LOBES[p.lobe].section, LOBES[p.lobe].label, p.lobe
+      ].concat(aliases).join(' ').toLowerCase();
+      idx.push({ project: p, text: words });
+    });
+    return idx;
+  })(),
+
+  search: function(query) {
+    var terms = query.toLowerCase().split(/\s+/).filter(function(t){ return t.length > 1; });
+    if (!terms.length) return [];
+    var scores = {};
+    this.INDEX.forEach(function(entry, i) {
+      var score = 0;
+      terms.forEach(function(t) {
+        var re = new RegExp(t, 'g');
+        var matches = entry.text.match(re);
+        if (matches) score += matches.length + (entry.text.indexOf(' ' + t + ' ') >= 0 ? 2 : 0);
+      });
+      if (score > 0) scores[i] = score;
+    });
+    return Object.keys(scores)
+      .sort(function(a,b){ return scores[b] - scores[a]; })
+      .slice(0, 4)
+      .map(function(i){ return Chat.INDEX[i].project; });
+  },
+
+  toggle: function() {
+    this.open = !this.open;
+    document.getElementById('chat-window').classList.toggle('open', this.open);
+    if (this.open && this.msgCount === 0) this.greet();
+    if (this.open) setTimeout(function(){ document.getElementById('chat-input').focus(); }, 300);
+  },
+
+  greet: function() {
+    this.addMsg('bot', 'Hi! 👋 I help you find projects in Vidhi\'s brain.<br><br>Try: <b>VR</b>, <b>storytelling</b>, <b>furniture</b>, <b>podcast</b>, <b>AR</b>, <b>interior</b>, <b>Unity</b>, <b>film</b>, <b>spatial</b>…');
+  },
+
+  addMsg: function(role, html) {
+    var msgs = document.getElementById('chat-msgs');
+    var div = document.createElement('div');
+    div.className = 'chat-msg ' + role;
+    div.innerHTML = html;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    this.msgCount++;
+  },
+
+  send: function() {
+    var input = document.getElementById('chat-input');
+    var q = input.value.trim();
+    if (!q) return;
+    input.value = '';
+    this.addMsg('user', q);
+
+    var results = this.search(q);
+    if (!results.length) {
+      this.addMsg('bot', 'No match found. Try words like <b>VR</b>, <b>spatial</b>, <b>design</b>, <b>audio</b>, <b>film</b>, or a skill name from the resume.');
+      return;
+    }
+
+    var lobeGroups = {};
+    results.forEach(function(p) {
+      if (!lobeGroups[p.lobe]) lobeGroups[p.lobe] = [];
+      lobeGroups[p.lobe].push(p);
+    });
+
+    var html = 'Found <b>' + results.length + '</b> project' + (results.length > 1 ? 's' : '') + ' for "<b>' + q + '</b>":<br><br>';
+    Object.keys(lobeGroups).forEach(function(lobe) {
+      var l = LOBES[lobe];
+      html += '<span style="color:' + l.hex + ';font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;">' + l.label + '</span><br>';
+      lobeGroups[lobe].forEach(function(p) {
+        html += '<button class="chat-suggestion" style="color:' + l.hex + ';border-color:' + l.hex + '55;" onclick="Chat.gotoProject(\'' + p.id + '\',\'' + lobe + '\')">' + p.name + '</button>';
+      });
+      html += '<br>';
+    });
+    this.addMsg('bot', html);
+  },
+
+  gotoProject: function(projId, lobeKey) {
+    this.open = false;
+    document.getElementById('chat-window').classList.remove('open');
+    if(typeof closeMobileNav==='function') closeMobileNav();
+    if(window.innerWidth<=700){
+      App.activeLobe=lobeKey; App.state='lobe';
+      App.openPanel(projId);
+    } else if (App.state !== 'lobe' || App.activeLobe !== lobeKey) {
+      App.zoomToLobe(lobeKey);
+      setTimeout(function(){ App.openPanel(projId); }, 950);
+    } else {
+      App.openPanel(projId);
+    }
+  }
+};
+window.Chat = Chat;
+
+document.getElementById('chat-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') Chat.send();
+});
+
+// ═══════════════════════════════════════════════════════════
+// BACKGROUND MUSIC  -  procedural pentatonic synth (Web Audio API)
+// Auto-starts on first user interaction (browser policy)
+// ═══════════════════════════════════════════════════════════
+var _actx = null, _mGain = null, _playing = false, _step = 0, _tickId = null, _filter = null;
+
+var PENTA_NOTES = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 784.00, 880.00];
+var MELODY_SEQ  = [4,3,2,4, 3,2,0,1, 4,6,5,4, 3,2,1,-1, 2,3,4,5, 4,3,2,0, 1,3,2,1, 0,-1,-1,-1];
+var BASS_NOTES  = [130.81, 146.83, 164.81, 196.00, 220.00];
+var BASS_SEQ    = [0,-1,0,-1, -1,0,-1,-1, 0,-1,0,-1, -1,-1,0,-1];
+var BPM_STEP    = (60 / 76 / 2) * 1000; // ms per 8th note at 76bpm
+
+function _playNote(freq, durSec, vol, type, dest) {
+  var o = _actx.createOscillator();
+  var e = _actx.createGain();
+  var now = _actx.currentTime;
+  o.type = type;
+  o.frequency.value = freq;
+  e.gain.setValueAtTime(0, now);
+  e.gain.linearRampToValueAtTime(vol, now + 0.04);
+  e.gain.exponentialRampToValueAtTime(0.001, now + durSec * 0.82);
+  o.connect(e);
+  e.connect(dest);
+  o.start(now);
+  o.stop(now + durSec);
+}
+
+function _musicTick() {
+  _tickId = null;
+  if (!_playing || !_filter) return;
+  var mi = MELODY_SEQ[_step % MELODY_SEQ.length];
+  var bi = BASS_SEQ[_step % BASS_SEQ.length];
+  var dur = BPM_STEP / 1000 * 1.1;
+  try {
+    if (mi >= 0) _playNote(PENTA_NOTES[mi], dur, 0.13, 'sine', _filter);
+    if (bi >= 0) _playNote(BASS_NOTES[bi % BASS_NOTES.length], dur * 3, 0.065, 'triangle', _filter);
+    if (_step % 4 === 2 && mi >= 0 && mi + 2 < PENTA_NOTES.length)
+      _playNote(PENTA_NOTES[mi + 2] * 0.9975, dur, 0.055, 'sine', _filter);
+  } catch(e) {}
+  _step++;
+  _tickId = setTimeout(_musicTick, BPM_STEP);
+}
+
+function startMusic() {
+  if (_actx) return;
+  _actx = new (window.AudioContext || window.webkitAudioContext)();
+  _mGain = _actx.createGain();
+  _mGain.gain.value = 0;
+  _mGain.connect(_actx.destination);
+
+  // Reverb impulse
+  var rb = _actx.createBuffer(2, _actx.sampleRate * 2, _actx.sampleRate);
+  for (var c = 0; c < 2; c++) {
+    var d = rb.getChannelData(c);
+    for (var i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2.5);
+  }
+  var rev = _actx.createConvolver(); rev.buffer = rb;
+  var rg = _actx.createGain(); rg.gain.value = 0.2;
+  rev.connect(rg); rg.connect(_mGain);
+
+  _filter = _actx.createBiquadFilter();
+  _filter.type = 'lowpass';
+  _filter.frequency.value = 1800;
+  _filter.connect(_mGain);
+  _filter.connect(rev);
+
+  _playing = true;
+  _mGain.gain.linearRampToValueAtTime(0.48, _actx.currentTime + 2.5);
+  _musicTick();
+  document.getElementById('music-btn').innerHTML = '♬';
+  document.getElementById('music-btn').title = 'Mute music';
+}
+
+function toggleMusic() {
+  if (!_actx) { startMusic(); return; }
+  var btn = document.getElementById('music-btn');
+  var slash = document.getElementById('music-slash');
+  var note  = document.getElementById('music-note');
+  if (_playing) {
+    // MUTE — dark interior, slash appears, note dims
+    _playing = false;
+    if (_tickId) { clearTimeout(_tickId); _tickId = null; }
+    _mGain.gain.cancelScheduledValues(_actx.currentTime);
+    _mGain.gain.setValueAtTime(_mGain.gain.value, _actx.currentTime);
+    _mGain.gain.linearRampToValueAtTime(0, _actx.currentTime + 0.6);
+    if (slash) slash.style.display = 'block';
+    if (note)  note.style.opacity  = '0.2';
+    if (btn)   { btn.style.background = '#050510'; btn.style.border = '2px solid #ffffff'; btn.title = 'Play music'; }
+  } else {
+    // UNMUTE — white interior, slash hidden, note bright
+    _playing = true;
+    _mGain.gain.cancelScheduledValues(_actx.currentTime);
+    _mGain.gain.setValueAtTime(_mGain.gain.value, _actx.currentTime);
+    _mGain.gain.linearRampToValueAtTime(0.48, _actx.currentTime + 0.6);
+    if (slash) slash.style.display = 'none';
+    if (note)  note.style.opacity  = '1';
+    if (btn)   { btn.style.background = '#ffffff'; btn.style.border = '2px solid #ffffff'; btn.title = 'Mute music'; }
+    if (!_tickId) _musicTick();
+  }
+}
+window.toggleMusic = toggleMusic;
+
+// Auto-start on first
+['click','touchstart','keydown'].forEach(function(ev){
+  document.addEventListener(ev, function startAudio(){
+    startMusic();
+    ['click','touchstart','keydown'].forEach(function(e2){
+      document.removeEventListener(e2, startAudio);
+    });
+  },{once:true});
+});
+</script>
+</body>
+</html>
