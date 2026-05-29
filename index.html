@@ -108,13 +108,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050510;font-family:
 
 /* ── CENTER HINT ── */
 #center-hint{
-  position:fixed;bottom:3rem;left:50%;transform:translateX(-50%);
-  z-index:220;text-align:center;pointer-events:none;transition:opacity .6s;
+  position:fixed;left:3%;top:50%;transform:translateY(-50%);
+  z-index:220;text-align:left;pointer-events:none;transition:opacity .6s;
+  max-width:18vw;min-width:120px;
 }
-#center-hint p{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.35);}
-#center-hint .hint-arrows{font-size:1rem;color:rgba(255,255,255,.2);margin-bottom:.4rem;animation:hintpulse 2s ease-in-out infinite;}
+#center-hint p{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.38);line-height:1.9;}
+#center-hint .hint-arrows{font-size:1rem;color:rgba(255,255,255,.22);margin-bottom:.5rem;animation:hintpulse 2s ease-in-out infinite;}
 @keyframes hintpulse{0%,100%{opacity:.2;}50%{opacity:.6;}}
 #center-hint.hide{opacity:0;}
+@media(max-width:1100px){#center-hint{display:none;}}
 
 /* ── BACK BUTTON ── */
 #back-btn{
@@ -143,22 +145,25 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050510;font-family:
 
 /* ── NODE LABEL ── */
 #node-label{
-  position:fixed;z-index:400;max-width:200px;
-  padding:.6rem .9rem;
-  background:rgba(5,5,20,.9);border:1px solid rgba(255,255,255,.1);
-  backdrop-filter:blur(12px);border-radius:3px;
+  position:fixed;z-index:400;max-width:220px;min-width:80px;
+  padding:.55rem .85rem;
+  background:rgba(5,5,20,.92);border:1px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(12px);border-radius:4px;
   pointer-events:none;opacity:0;transition:opacity .18s ease;
-  font-size:.72rem;font-weight:600;white-space:nowrap;
+  font-size:.7rem;font-weight:600;
+  white-space:normal;word-break:break-word;line-height:1.45;
 }
 
 /* ── LOBE ZONE LABEL ── */
 #zone-label{
-  position:fixed;bottom:2.5rem;right:2rem;z-index:220;
-  pointer-events:none;text-align:right;opacity:0;transition:opacity .5s;
+  position:fixed;right:3%;top:50%;transform:translateY(-50%);z-index:220;
+  pointer-events:none;text-align:left;opacity:0;transition:opacity .5s;
+  max-width:18vw;min-width:140px;
 }
 #zone-label.show{opacity:1;}
-.zl-eyebrow{font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.35);}
-.zl-title{font-size:1.1rem;font-weight:300;color:#fff;margin-top:.2rem;}
+.zl-eyebrow{font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.35);}
+.zl-title{font-size:1rem;font-weight:300;color:#fff;margin-top:.25rem;line-height:1.35;}
+@media(max-width:1100px){#zone-label{display:none;}}
 
 /* ── SIDE PANEL ── */
 #panel{
@@ -260,12 +265,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050510;font-family:
 
 /* ── ABOUT / CONTACT MODAL ── */
 #modal-overlay{
-  position:fixed;inset:0;z-index:3000;
-  pointer-events:none;
+  position:fixed;inset:0;z-index:9999;
   background:rgba(2,2,12,.85);backdrop-filter:blur(18px);
   display:flex;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;transition:opacity .35s;
   padding:1.5rem;
+  touch-action:manipulation;
 }
 #modal-overlay.open{opacity:1;pointer-events:all !important;}
 #modal-box{
@@ -402,9 +407,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050510;font-family:
     max-width:94vw !important;
   }
 
-  /* ── HINT ── */
-  #center-hint p{font-size:.6rem;letter-spacing:.14em;}
-  #center-hint .hint-arrows{font-size:.85rem;}
+  /* ── HINT (hidden on mobile — brain fills width) ── */
+  /* #center-hint already display:none via 1100px breakpoint */
 
   /* ── BACK BUTTON ── */
   #back-btn{
@@ -414,13 +418,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050510;font-family:
     white-space:nowrap;
   }
 
-  /* ── ZONE LABEL ── */
-  #zone-label{
-    display:block;
-    bottom:auto;top:5rem;right:1rem;
-    text-align:right;
-  }
-  .zl-title{font-size:.88rem;}
+  /* ── ZONE LABEL (hidden on mobile via 1100px breakpoint) ── */
 
   /* ── PANEL slides up from bottom on mobile ── */
   #panel{
@@ -456,16 +454,36 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050510;font-family:
   #music-btn,#chat-toggle{width:40px;height:40px;}
 
   /* ── MODAL ── */
-  #modal-overlay{padding:.8rem;}
+  #modal-overlay{
+    padding:.8rem;
+    z-index:9999 !important;
+    touch-action:manipulation;
+    -webkit-overflow-scrolling:touch;
+  }
   #modal-box{
     padding:1.4rem 1.2rem 1.8rem;
     max-height:90vh;border-radius:10px;
+    touch-action:pan-y;
+    -webkit-overflow-scrolling:touch;
+  }
+  .modal-close{
+    min-height:44px;min-width:44px;
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:.5rem 1rem;
+  }
+  .modal-tab{
+    min-height:44px;
+    display:inline-flex;align-items:center;
   }
   .modal-pane h2{font-size:1.2rem;}
   .modal-pane .tagline{font-size:.68rem;}
   .modal-pane p{font-size:.78rem;}
   .about-pill{font-size:.58rem;padding:.2rem .55rem;}
   .contact-value{font-size:.75rem;}
+  .contact-item{
+    min-height:56px;
+    touch-action:manipulation;
+  }
 
   /* ── TOOLTIP — hide on mobile (use tap instead) ── */
   #tooltip{display:none;}
@@ -474,6 +492,89 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050510;font-family:
 @media(max-width:380px){
   #typewriter{font-size:1.25rem !important;}
   #chatbot{bottom:5rem;left:.8rem;}
+}
+
+/* ── WELCOME HINT (right void, left-aligned) ── */
+#welcome-hint{
+  position:fixed;
+  right:3%;top:50%;transform:translateY(-50%);
+  z-index:215;max-width:18vw;min-width:140px;text-align:left;
+  pointer-events:none;opacity:0;transition:opacity .6s;
+}
+#welcome-hint.show{opacity:1;}
+.wh-eyebrow{font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(192,132,252,.55);margin-bottom:.5rem;}
+.wh-title{font-size:.88rem;font-weight:300;color:rgba(255,255,255,.72);line-height:1.5;margin-bottom:1rem;}
+.wh-steps{display:flex;flex-direction:column;gap:.5rem;}
+.wh-step{font-size:.62rem;color:rgba(255,255,255,.35);line-height:1.6;letter-spacing:.03em;}
+@media(max-width:1100px){#welcome-hint{display:none;}}
+
+/* ── CURSOR ── */
+body.pointer{cursor:pointer;}
+#skip-intro{
+  position:fixed;bottom:2.5rem;right:2rem;z-index:3000;
+  font-family:'Sora',sans-serif;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
+  padding:.45rem 1.1rem;border-radius:3px;
+  border:1px solid rgba(255,255,255,.22);
+  background:rgba(5,5,20,.75);backdrop-filter:blur(12px);
+  color:rgba(255,255,255,.5);cursor:pointer;
+  transition:all .3s;opacity:0;pointer-events:none;
+  animation:skipFadeIn .4s ease 2.5s forwards;
+}
+@keyframes skipFadeIn{to{opacity:1;pointer-events:all;}}
+#skip-intro:hover{border-color:rgba(255,255,255,.45);color:#fff;background:rgba(5,5,20,.95);}
+#skip-intro.hidden{display:none;}
+
+/* ── ONBOARDING OVERLAY ── */
+#onboarding{
+  position:fixed;inset:0;z-index:8000;
+  background:rgba(2,2,12,.82);backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .4s;
+  padding:1.5rem;
+}
+#onboarding.show{opacity:1;pointer-events:all;}
+#onboard-box{
+  width:100%;max-width:480px;
+  background:rgba(8,5,22,.98);border:1px solid rgba(192,132,252,.25);
+  border-radius:14px;padding:2.4rem 2.4rem 2rem;
+  transform:translateY(20px);transition:transform .4s cubic-bezier(.22,1,.36,1);
+}
+#onboarding.show #onboard-box{transform:translateY(0);}
+.ob-step{display:none;}
+.ob-step.active{display:block;}
+.ob-eyebrow{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:#c084fc;margin-bottom:.7rem;}
+.ob-title{font-size:1.5rem;font-weight:600;color:#fff;margin-bottom:.7rem;line-height:1.2;}
+.ob-body{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:1.6rem;}
+.ob-body b{color:rgba(255,255,255,.85);}
+.ob-visual{
+  display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;
+}
+.ob-card{
+  flex:1;min-width:100px;padding:.9rem;border-radius:8px;
+  border:1px solid;text-align:center;
+}
+.ob-card-icon{font-size:1.4rem;margin-bottom:.35rem;}
+.ob-card-label{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;line-height:1.4;}
+.ob-nav{display:flex;align-items:center;justify-content:space-between;margin-top:.5rem;}
+.ob-dots{display:flex;gap:.4rem;}
+.ob-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transition:background .3s;}
+.ob-dot.active{background:#c084fc;}
+.ob-btn{
+  font-family:'Sora',sans-serif;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;
+  padding:.6rem 1.5rem;border-radius:3px;border:1px solid rgba(192,132,252,.5);
+  background:rgba(192,132,252,.12);color:#c084fc;cursor:pointer;transition:all .25s;
+}
+.ob-btn:hover{background:rgba(192,132,252,.25);border-color:#c084fc;}
+.ob-btn-skip{
+  font-family:'Sora',sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;
+  background:transparent;border:none;color:rgba(255,255,255,.28);cursor:pointer;
+  transition:color .2s;padding:.4rem;
+}
+.ob-btn-skip:hover{color:rgba(255,255,255,.55);}
+@media(max-width:700px){
+  #onboard-box{padding:1.8rem 1.4rem 1.5rem;}
+  .ob-title{font-size:1.2rem;}
+  .ob-body{font-size:.76rem;}
 }
 
 /* ── CURSOR ── */
@@ -582,6 +683,9 @@ body.pointer{cursor:pointer;}
   <p class="ld-txt">Initialising neural pathways…</p>
 </div>
 
+<!-- SKIP INTRO BUTTON (shown after first 2.5s of animation) -->
+<button id="skip-intro" onclick="skipIntro()">Skip Intro &#8594;</button>
+
 <!-- INTRO OVERLAY -->
 <div id="intro-overlay">
   <div id="typewriter"></div>
@@ -618,7 +722,7 @@ body.pointer{cursor:pointer;}
 
   <div id="center-hint">
     <div class="hint-arrows">&#8593; &#8595; &#8592; &#8594;</div>
-    <p>Hover a lobe to explore &nbsp;&middot;&nbsp; Click to dive in &nbsp;&middot;&nbsp; Drag to rotate</p>
+    <p>Tap a lobe&nbsp;&middot;&nbsp;Click a dot&nbsp;&middot;&nbsp;Drag to rotate</p>
   </div>
 
   <button id="back-btn" onclick="App.resetBrain()">&#8592; Back to Full Brain</button>
@@ -626,6 +730,17 @@ body.pointer{cursor:pointer;}
   <div id="zone-label">
     <p class="zl-eyebrow" id="zl-eye"></p>
     <p class="zl-title"   id="zl-tit"></p>
+  </div>
+
+  <!-- Welcome hint - shown right-centre when no lobe selected -->
+  <div id="welcome-hint">
+    <p class="wh-eyebrow">Vidhi's Portfolio</p>
+    <p class="wh-title">A living portfolio,<br>mapped to how I think.</p>
+    <div class="wh-steps">
+      <div class="wh-step">Tap a glowing lobe to explore a design discipline</div>
+      <div class="wh-step">Click a neuron dot to open a project</div>
+      <div class="wh-step">Drag to rotate the brain in any direction</div>
+    </div>
   </div>
 </div>
 
@@ -665,7 +780,7 @@ body.pointer{cursor:pointer;}
     <div class="modal-pane active" id="pane-about">
       <h2>Vidhi Doshi</h2>
       <div class="tagline">Creative Technologist &middot; Experience Designer &middot; Immersive Storyteller</div>
-      <p>I prototype interactive experiences at the intersection of <b>XR, AI, and experiential storytelling</b>. Currently completing my MS in Design, Business and Technology at the USC Iovine and Young Academy (GPA 3.92), I build things that blur the line between digital and physical, from VR training worlds to heritage spaces to generative art systems.</p>
+      <p>I prototype interactive experiences at the intersection of <b>XR, AI, and experiential storytelling</b>. I completed my MS in Design, Business and Technology at the USC Iovine and Young Academy with a <b>3.98 GPA</b>, building things that blur the line between digital and physical, from VR training worlds to heritage spaces to generative art systems.</p>
       <p>As co-founder of <b>Aura Lab</b>, I led end-to-end experience design for a Dunhuang Caves VR project in Unity, driving spatial layout, interaction flows, and narrative pacing from concept through trailer-ready build. I am also skilled at <b>content strategy and data analysis</b>, having generated 278K+ LinkedIn impressions with 31% CTR and built Excel automation that cut reporting time by 80%.</p>
       <p>I believe the best design does not just solve problems. It <b>creates new ways of feeling</b> inside a space, a system, or a story.</p>
       <div class="about-pills">
@@ -711,15 +826,15 @@ body.pointer{cursor:pointer;}
         <span class="about-pill">Generative Art</span>
         <span class="about-pill">Creative Tech</span>
       </div>
-      <p style="font-size:.75rem;color:rgba(255,255,255,.28);">USC Iovine and Young Academy &middot; Los Angeles, CA &middot; MS Design, Business and Technology</p>
+      <p style="font-size:.75rem;color:rgba(255,255,255,.28);">USC Iovine and Young Academy &middot; Los Angeles, CA &middot; MS Design, Business and Technology &middot; GPA 3.98</p>
     </div>
     <div class="modal-pane" id="pane-contact">
       <h2>Let's Connect</h2>
       <div class="tagline">Open to immersive design, creative tech &amp; content roles</div>
       <div class="contact-list">
-        <a class="contact-item" href="mailto:vidhi.doshi.work@gmail.com">
+        <a class="contact-item" href="/cdn-cgi/l/email-protection#3046595458591e545f4358591e475f425b70575d51595c1e535f5d">
           <span class="contact-icon">&#9993;</span>
-          <div><div class="contact-label">Email</div><div class="contact-value">vidhi.doshi.work@gmail.com</div></div>
+          <div><div class="contact-label">Email</div><div class="contact-value"><span class="__cf_email__" data-cfemail="02746b666a6b2c666d716a6b2c756d706942656f636b6e2c616d6f">[email&#160;protected]</span></div></div>
         </a>
         <a class="contact-item" href="https://www.linkedin.com/in/vidhi-doshi-646a52174/" target="_blank">
           <span class="contact-icon">&#128101;</span>
@@ -732,6 +847,48 @@ body.pointer{cursor:pointer;}
 
       </div>
       <p style="margin-top:1.6rem;font-size:.75rem;color:rgba(255,255,255,.25);line-height:1.7;">Based in Los Angeles &middot; Available for internships, freelance, and full-time roles in XR design, content strategy, creative technology, and immersive experience design.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING OVERLAY -->
+<div id="onboarding">
+  <div id="onboard-box">
+    <div class="ob-step active" id="ob-step-0">
+      <div class="ob-eyebrow">Welcome</div>
+      <div class="ob-title">This is Vidhi's Brain</div>
+      <div class="ob-body">A living portfolio where each region of the brain maps to a <b>design discipline</b>. No boring slideshows — explore the way ideas actually connect.</div>
+      <div class="ob-visual">
+        <div class="ob-card" style="border-color:rgba(0,200,255,.3);color:#00c8ff;background:rgba(0,200,255,.06)"><div class="ob-card-icon">&#128244;</div><div class="ob-card-label">XR &amp; Interactive</div></div>
+        <div class="ob-card" style="border-color:rgba(255,179,71,.3);color:#ffb347;background:rgba(255,179,71,.06)"><div class="ob-card-icon">&#127959;</div><div class="ob-card-label">Product &amp; Furniture</div></div>
+        <div class="ob-card" style="border-color:rgba(0,255,213,.3);color:#00ffd5;background:rgba(0,255,213,.06)"><div class="ob-card-icon">&#127968;</div><div class="ob-card-label">Interior &amp; Spatial</div></div>
+        <div class="ob-card" style="border-color:rgba(192,132,252,.3);color:#c084fc;background:rgba(192,132,252,.06)"><div class="ob-card-icon">&#127909;</div><div class="ob-card-label">Storytelling &amp; Media</div></div>
+      </div>
+    </div>
+    <div class="ob-step" id="ob-step-1">
+      <div class="ob-eyebrow">How to Navigate</div>
+      <div class="ob-title">Three simple gestures</div>
+      <div class="ob-body">
+        <b>&#9654; Tap a glowing lobe</b> to light up a design region and reveal projects inside it.<br><br>
+        <b>&#10038; Click a neuron dot</b> on the brain surface to open a specific project.<br><br>
+        <b>&#8635; Drag to rotate</b> — the brain is fully 3D, so spin it to see every angle.
+      </div>
+    </div>
+    <div class="ob-step" id="ob-step-2">
+      <div class="ob-eyebrow">Ready?</div>
+      <div class="ob-title">Start exploring</div>
+      <div class="ob-body">Use the <b>top nav buttons</b> to jump directly to any section, or rotate and click freely. The <b>&#129504; assistant</b> in the bottom-left can find projects by keyword.</div>
+    </div>
+    <div class="ob-nav">
+      <div class="ob-dots">
+        <div class="ob-dot active" id="ob-dot-0"></div>
+        <div class="ob-dot" id="ob-dot-1"></div>
+        <div class="ob-dot" id="ob-dot-2"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.8rem;">
+        <button class="ob-btn-skip" id="ob-skip" onclick="Onboard.skip()">Skip</button>
+        <button class="ob-btn" id="ob-next" onclick="Onboard.next()">Next &#8594;</button>
+      </div>
     </div>
   </div>
 </div>
@@ -749,12 +906,12 @@ body.pointer{cursor:pointer;}
   <button id="chat-toggle" onclick="Chat.toggle()" title="Find a project">&#129504;</button>
   <button id="music-btn" onclick="toggleMusic()" title="Mute music">
     <span id="music-note" style="color:#050510;font-size:1.2rem;">♬</span>
-    <span id="music-slash" style="display:none;position:absolute;width:100%;height:2px;background:#ff4466;top:50%;left:0;transform:rotate(-45deg);transform-origin:center;pointer-events:none;border-radius:2px;"></span>
+    <span id="music-slash" style="display:none;position:absolute;width:calc(100% - 8px);height:2px;background:#050510;top:50%;left:4px;transform:rotate(-45deg);transform-origin:center;pointer-events:none;border-radius:1px;"></span>
   </button>
 </div>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════
@@ -1408,68 +1565,96 @@ const App={
 
   // ── INTRO ────────────────────────────────────────
   async runIntro(){
+    // If user has seen the intro before, skip straight to brain
+    const seen = sessionStorage.getItem('vd_intro_seen');
     const ld=document.getElementById('loading');
+    if(seen){
+      document.getElementById('skip-intro').classList.add('hidden');
+      await App.delay(400);
+      ld.classList.add('fade');
+      await App.delay(700);
+      brainGroup.visible=true;
+      brainGroup.scale.set(1,1,1);
+      nodeGroup.visible=true;
+      NODE_MESHES.forEach(nd=>{
+        nd.mesh.material.opacity=0.75;
+        nd.glow.material.opacity=0.25;
+        nd.pulse.material.opacity=0;
+      });
+      gsap.to(camera.position,{x:0,y:1.5,z:10,duration:.8,ease:'power2.out'});
+      document.getElementById('ui').classList.add('show');
+      App.state='brain';
+      App._showWelcomeHint();
+      App.checkHash();
+      return;
+    }
+
+    App._skipFlag = false; // reset at start of every fresh intro
+
     await App.delay(600);
+    if(App._skipFlag) return;
     ld.classList.add('fade');
     await App.delay(1000);
+    if(App._skipFlag) return;
 
     // Show face
     faceGroup.visible=true;
     gsap.fromTo(faceGroup.scale,{x:0,y:0,z:0},{x:1.35,y:1.35,z:1.35,duration:.9,ease:'back.out(1.6)'});
-    // Eyes start closed (lidL/R rotation.x=0 = closed)
     faceGroup._lidL.rotation.x=0;
     faceGroup._lidR.rotation.x=0;
     await App.delay(700);
-    // Blink open
+    if(App._skipFlag) return;
     gsap.to([faceGroup._lidL.rotation,faceGroup._lidR.rotation],{x:Math.PI*.55,duration:.9,ease:'power2.inOut'});
-    // Subtle camera track
     gsap.to(camera.position,{y:.8,duration:1.5,ease:'sine.inOut'});
     await App.delay(1200);
+    if(App._skipFlag) return;
 
-    // Typewriter  -  dim face slightly so text is readable
+    // Typewriter
     gsap.to(faceGroup.children,{opacity:.6,duration:.5});
     const tw=document.getElementById('typewriter');
     const sub=document.getElementById('intro-sub');
-    // sub hidden (USC removed per request)
     const lines=["Hi, I'm Vidhi.","I build experiences, not just screens.","Let me show you how I think."];
     for(const line of lines){
+      if(App._skipFlag) return;
       tw.style.opacity=1;
       await App.type(tw,line,52);
+      if(App._skipFlag) return;
       await App.delay(900);
+      if(App._skipFlag) return;
       gsap.to(tw,{opacity:0,duration:.35});
       await App.delay(500);
+      if(App._skipFlag) return;
     }
     await App.delay(400);
+    if(App._skipFlag) return;
 
-    // Sub fade out
     gsap.to(sub,{opacity:0,duration:.4});
 
-    // Hat lifts straight off the head  -  floats up, then fades away
+    // Hat lifts
     gsap.to(faceGroup._cap.position,{y:5.5,duration:1.2,ease:'power2.inOut'});
-    // Fade all hat materials
     faceGroup._hatMats.forEach(m=>{
       m.transparent=true;
       gsap.to(m,{opacity:0,duration:0.65,delay:0.6,ease:'power2.in'});
     });
-    // Inner glow floods up as hat lifts
     gsap.fromTo(faceGroup._innerGlowMat,{opacity:0},{opacity:.72,duration:.85,delay:.35,ease:'power2.out'});
     await App.delay(900);
+    if(App._skipFlag) return;
 
-    // Camera zooms INTO the skull
+    // Camera zooms in
     gsap.to(camera.position,{x:0,y:1.3,z:2.8,duration:1.3,ease:'power2.inOut'});
     await App.delay(900);
+    if(App._skipFlag) return;
 
-    // Fade out face, show brain
+    // Face → brain transition
     gsap.to(faceGroup.scale,{x:0,y:0,z:0,duration:.55,ease:'power2.in'});
     await App.delay(350);
+    if(App._skipFlag) return;
     faceGroup.visible=false;
     brainGroup.visible=true;
     brainGroup.scale.set(.01,.01,.01);
     gsap.to(brainGroup.scale,{x:1,y:1,z:1,duration:.8,ease:'back.out(1.4)'});
 
-    // Camera to brain view
     gsap.to(camera.position,{x:0,y:1.5,z:10,duration:1.15,ease:'power2.out'});
-    // Reveal all nodes as glowing neuron dots across the brain
     nodeGroup.visible=true;
     NODE_MESHES.forEach(nd=>{
       nd.mesh.material.opacity=0.75;
@@ -1477,10 +1662,12 @@ const App={
       gsap.to(nd.glow.material,{opacity:0.28,duration:.6,delay:.4+Math.random()*.4});
     });
     await App.delay(700);
+    if(App._skipFlag) return;
 
-    // Lobe pulse sequence  -  light each lobe one at a time
+    // Lobe pulse sequence
     const lobeKeys=['temporal','frontal','parietal','occipital'];
     for(const k of lobeKeys){
+      if(App._skipFlag) return;
       const pl=LOBE_LIGHTS[k];
       const bump=LOBE_BUMPS[k];
       gsap.to(pl,{intensity:5,duration:.3,yoyo:true,repeat:1});
@@ -1488,13 +1675,31 @@ const App={
       await App.delay(320);
     }
     await App.delay(400);
+    if(App._skipFlag) return;
 
-    // Show UI + hint
+    // Done — show UI
+    document.getElementById('skip-intro').classList.add('hidden');
     document.getElementById('ui').classList.add('show');
     App.state='brain';
+    sessionStorage.setItem('vd_intro_seen','1');
 
-    // Check hash for direct-link routing
+    const everSeen = localStorage.getItem('vd_onboard_done');
+    if(!everSeen){
+      setTimeout(()=>Onboard.show(), 500);
+    } else {
+      App._showWelcomeHint();
+    }
     App.checkHash();
+  },
+
+  // Show welcome hint (right centre, brain state only)
+  _showWelcomeHint(){
+    const wh = document.getElementById('welcome-hint');
+    if(wh) { wh.classList.add('show'); }
+  },
+  _hideWelcomeHint(){
+    const wh = document.getElementById('welcome-hint');
+    if(wh) { wh.classList.remove('show'); }
   },
 
   // ── HASH ROUTING ─────────────────────────────────
@@ -1527,11 +1732,12 @@ const App={
     App.state='lobe';
     const lobe=LOBES[lobeKey];
     document.getElementById('center-hint').classList.add('hide');
+    App._hideWelcomeHint();
     document.getElementById('back-btn').classList.add('show');
 
     // Zone label
     const zl=document.getElementById('zone-label');
-    document.getElementById('zl-eye').textContent='Region active  -  '+lobe.label;
+    document.getElementById('zl-eye').textContent='Region active  —  '+lobe.label;
     document.getElementById('zl-tit').textContent=lobe.section;
     document.getElementById('zl-eye').style.color=lobe.hex;
     zl.classList.add('show');
@@ -1546,15 +1752,61 @@ const App={
     gsap.to(brainMat,{opacity:.45,duration:.7});
     gsap.to(wfMat,{opacity:.03,duration:.7});
 
-    // Camera zoom toward lobe
-    const lp=lobe.sciPos.clone().normalize();
-    const cPos={
-      x:lp.x*6.5,
-      y:lp.y*4+2.5,
-      z:lp.z*5.5+4.5
-    };
-    gsap.to(camera.position,{x:cPos.x,y:cPos.y,z:cPos.z,duration:1.15,ease:'power2.inOut'});
-    camLookAtTarget.copy(lobe.sciPos.clone().multiplyScalar(.78));
+    // ── Rotate brain so the selected lobe faces the camera ──
+    // Each lobe's sciPos in local brain space tells us the direction we need to rotate
+    // FROM that direction TO the camera (+Z axis).
+    //
+    // sciPos values:
+    //   temporal  (XR)       → (-2.6, -0.15,  0.9)  — left side, slightly front
+    //   frontal   (Product)  → ( 0.4,  0.9,   2.8)  — top-front
+    //   parietal  (Interior) → ( 0.0,  2.35,  0.0)  — top centre
+    //   occipital (Story)    → ( 0.0,  0.2,  -2.9)  — back centre
+    //
+    // targetRotY: yaw so lobe's XZ direction → +Z (front)
+    //   = -atan2(sciPos.x, sciPos.z)  but we also need to consider current brain default
+    // targetRotX: pitch so lobe's Y elevation → 0 (eye level)
+    //   = clamp(-asin(normalized.y) * 0.5)
+    //
+    // We reset to a clean reference each call so the result is always consistent
+    // regardless of the current drag state.
+
+    const _sp = lobe.sciPos;
+    const _len = Math.sqrt(_sp.x*_sp.x + _sp.y*_sp.y + _sp.z*_sp.z);
+    const _nx = _sp.x/_len, _ny = _sp.y/_len, _nz = _sp.z/_len;
+
+    // Yaw: rotate around Y so the lobe's XZ projection faces +Z
+    const targetDragRotY = -Math.atan2(_nx, _nz);
+    // Pitch: tilt so lobe's elevation is centered (negative because more Y = tilt brain down)
+    const targetDragRotX = Math.max(-Math.PI*0.35, Math.min(Math.PI*0.35, -_ny * 0.7));
+
+    // Kill momentum + any in-progress tween
+    dragVelX = 0; dragVelY = 0;
+    App._lobeZooming = true;  // pause mouse-follow drift while animating
+    gsap.killTweensOf(window._rotProxy || {});
+
+    window._rotProxy = {y: dragRotY, x: dragRotX};
+    gsap.to(window._rotProxy, {
+      y: targetDragRotY,
+      x: targetDragRotX,
+      duration: 1.3,
+      ease: 'power2.inOut',
+      onUpdate: function(){
+        dragRotY = window._rotProxy.y;
+        dragRotX = window._rotProxy.x;
+        App.brainRotY = dragRotY;
+        App.brainRotX = dragRotX;
+      },
+      onComplete: function(){
+        // Sync targetRot so mouse-follow resumes from the landed position (no snap)
+        App.targetRotY = dragRotY;
+        App.targetRotX = dragRotX;
+        App._lobeZooming = false;
+      }
+    });
+
+    // Camera: stay centred, slight vertical shift for top/bottom lobes
+    gsap.to(camera.position, {x:0, y:1.5 + targetDragRotX*2, z:8.5, duration:1.3, ease:'power2.inOut'});
+    camLookAtTarget.set(0, 0.2, 0);
 
     // Active lobe nodes → full size glowing neurons; others → small ambient
     nodeGroup.visible=true;
@@ -1583,7 +1835,11 @@ const App={
     App.closePanel(true);
     App.activeLobe=null;
     App.hoveredLobe=null;
+    App._lobeZooming=false;
     App.state='brain';
+    // Sync mouse-follow target to current brain position so it resumes smoothly
+    App.targetRotY=dragRotY;
+    App.targetRotX=dragRotX;
 
     document.getElementById('center-hint').classList.remove('hide');
     document.getElementById('back-btn').classList.remove('show');
@@ -1591,6 +1847,7 @@ const App={
     document.getElementById('zone-label').classList.remove('show');
     document.querySelectorAll('.tb-btn').forEach(b=>b.style.fontWeight='400');
     window.location.hash='';
+    App._showWelcomeHint();
 
     Object.entries(LOBE_LIGHTS).forEach(([k,pl])=>{
       gsap.to(pl,{intensity:LOBES[k]._baseIntensity,duration:.65});
@@ -1701,10 +1958,10 @@ const App={
   // ── TOOLTIP ──────────────────────────────────────
   showLobeTooltip(lobeKey,x,y){
     const l=LOBES[lobeKey];
-    document.getElementById('tt-name').textContent=l.label;
+    document.getElementById('tt-name').textContent=l.section;
     document.getElementById('tt-name').style.color=l.hex;
     document.getElementById('tt-sci').textContent=l.tooltip;
-    document.getElementById('tt-sec').textContent='→ '+l.section;
+    document.getElementById('tt-sec').textContent='Click to explore →';
     document.getElementById('tt-sec').style.color=l.hex;
     App._positionEl(document.getElementById('tooltip'),x,y,280,130);
     gsap.to(document.getElementById('tooltip'),{opacity:1,duration:.2});
@@ -1716,16 +1973,26 @@ const App={
     nl.textContent=proj.name;
     nl.style.color=LOBES[proj.lobe].hex;
     nl.style.borderColor=LOBES[proj.lobe].hex+'44';
-    App._positionEl(nl,x,y,210,50);
+    // Make visible but transparent to measure actual size
+    nl.style.visibility='hidden';
+    nl.style.opacity='0';
+    nl.style.left='0px'; nl.style.top='0px';
+    // Use actual rendered dimensions so wrapping text is always fully covered
+    const w=nl.offsetWidth||220;
+    const h=nl.offsetHeight||40;
+    App._positionEl(nl,x,y,w,h);
+    nl.style.visibility='';
     gsap.to(nl,{opacity:1,duration:.18});
   },
   hideNodeLabel(){gsap.to(document.getElementById('node-label'),{opacity:0,duration:.15});},
 
   _positionEl(el,mx,my,w,h){
-    let x=mx+16, y=my-h-10;
-    if(x+w>window.innerWidth) x=mx-w-16;
-    if(y<8) y=my+16;
-    if(y+h>window.innerHeight) y=window.innerHeight-h-8;
+    const pad=10;
+    let x=mx+18, y=my-h-12;
+    if(x+w>window.innerWidth-pad) x=mx-w-18;
+    if(x<pad) x=pad;
+    if(y<pad) y=my+18;
+    if(y+h>window.innerHeight-pad) y=window.innerHeight-h-pad;
     el.style.left=x+'px'; el.style.top=y+'px';
   },
 
@@ -1735,6 +2002,7 @@ const App={
     return new Promise(res=>{
       let i=0; el.style.opacity=1; el.textContent='';
       const id=setInterval(()=>{
+        if(App._skipFlag){clearInterval(id);el.textContent='';el.style.opacity=0;res();return;}
         el.textContent=text.slice(0,++i);
         if(i>=text.length){clearInterval(id);setTimeout(res,200);}
       },spd);
@@ -1756,6 +2024,8 @@ window.addEventListener('mousedown',e=>{
   if(e.target.closest('#panel')||e.target.closest('#topbar')) return;
   if(App.state==='brain'||App.state==='lobe'||App.state==='panel'){
     isDragging=true;
+    App._lobeZooming=false;  // user took control — cancel any zoom animation
+    gsap.killTweensOf(window._rotProxy||{});
     dragStartX=e.clientX; dragStartY=e.clientY;
     lastDragX=e.clientX; lastDragY=e.clientY;
     dragVelX=0; dragVelY=0;
@@ -1779,8 +2049,8 @@ window.addEventListener('mousemove',e=>{
     lastDragX=e.clientX; lastDragY=e.clientY;
     App.brainRotY=dragRotY;
     App.brainRotX=dragRotX;
-  } else {
-    // Gentle mouse-follow when not dragging
+  } else if(!App.activeLobe){
+    // Mouse-follow target — only tracked when no lobe is locked
     App.targetRotY=(e.clientX/W()-.5)*.12;
     App.targetRotX=-(e.clientY/H()-.5)*.08;
   }
@@ -1882,7 +2152,8 @@ window.addEventListener('touchend',function(e){
   isDragging=false;
   // Let browser handle taps on UI elements natively (links, buttons, inputs)
   if(e.target.closest('#topbar')||e.target.closest('#mobile-nav')||
-     e.target.closest('#chatbot')||e.target.closest('#modal-overlay')) return;
+     e.target.closest('#chatbot')||e.target.closest('#modal-overlay')||
+     e.target.closest('#modal-box')) return;
   // Panel taps: let browser handle natively (links, close button)
   if(e.target.closest('#panel')) return;
   if(touchMoved||App.state==='loading'||App.state==='intro') return;
@@ -1931,14 +2202,14 @@ function animate(){
   const dt=Math.min(clock.getDelta(),.033);
   time+=dt;
 
-  // Brain rotation  -  drag overrides mouse-follow
+  // Brain rotation
   if(App.state==='brain'||App.state==='lobe'||App.state==='panel'){
     if(!isDragging){
-      if(!App.isMobile){
-        // Gentle mouse-follow drift when not dragging
+      if(!App.isMobile && App.state==='brain' && !App.activeLobe){
+        // Mouse-follow drift ONLY on idle brain — never when a lobe is selected
         dragRotY+=(App.targetRotY-dragRotY)*.025;
         dragRotX+=(App.targetRotX-dragRotX)*.025;
-      } else {
+      } else if(App.isMobile && !App.activeLobe){
         if(mobileAutoRotate) dragRotY+=.004;
       }
     }
@@ -1999,56 +2270,72 @@ function animate(){
   if(App.state==='brain'||App.state==='lobe'){
     App.raycaster.setFromCamera(App.mouse,camera);
 
-    // Check nodes  -  hover works on ALL visible nodes regardless of lobe
-    if(true){
-      const vis=NODE_MESHES.filter(n=>n.mesh.scale.x>.2);
-      const hits=App.raycaster.intersectObjects(vis.map(n=>n.mesh));
-      if(hits.length>0){
-        const hObj=hits[0].object;
-        const projId=hObj.userData.projId;
-        if(App.hoveredNode!==projId){
-          // Un-hover old
-          if(App.hoveredNode){
-            const old=NODE_DATA[App.hoveredNode];
-            if(old) gsap.to(old.mesh.scale,{x:1,y:1,z:1,duration:.2});
-          }
-          App.hoveredNode=projId;
-          gsap.to(hObj.scale,{x:2.8,y:2.8,z:2.8,duration:.22,ease:'back.out(2)'});
-          App.showNodeLabel(NODE_DATA[projId].project,App.mouseScreen.x,App.mouseScreen.y);
-          document.body.classList.add('pointer');
-        } else {
-          // Update label position
-          App._positionEl(document.getElementById('node-label'),App.mouseScreen.x,App.mouseScreen.y,210,50);
-        }
-      } else {
+    // ── Step 1: Check project nodes ──
+    const vis=NODE_MESHES.filter(n=>n.mesh.scale.x>.2);
+    const nodeHits=App.raycaster.intersectObjects(vis.map(n=>n.mesh));
+
+    if(nodeHits.length>0){
+      // ON A NODE — show node label only, kill lobe tooltip
+      const hObj=nodeHits[0].object;
+      const projId=hObj.userData.projId;
+
+      // Always hide lobe tooltip when on a node
+      if(App.hoveredLobe){
+        gsap.to(LOBE_BUMPS[App.hoveredLobe].material,{opacity:.22,duration:.25});
+        App.hoveredLobe=null;
+      }
+      App.hideTooltip();
+
+      if(App.hoveredNode!==projId){
+        // Un-hover old node
         if(App.hoveredNode){
           const old=NODE_DATA[App.hoveredNode];
           if(old) gsap.to(old.mesh.scale,{x:1,y:1,z:1,duration:.2});
-          App.hoveredNode=null;
-          App.hideNodeLabel();
-          document.body.classList.remove('pointer');
         }
+        App.hoveredNode=projId;
+        gsap.to(hObj.scale,{x:2.8,y:2.8,z:2.8,duration:.22,ease:'back.out(2)'});
+        App.showNodeLabel(NODE_DATA[projId].project,App.mouseScreen.x,App.mouseScreen.y);
+        document.body.classList.add('pointer');
+      } else {
+        // Just update label position as mouse moves
+        const _nl=document.getElementById('node-label');
+        App._positionEl(_nl,App.mouseScreen.x,App.mouseScreen.y,_nl.offsetWidth||220,_nl.offsetHeight||40);
       }
+
     } else {
-      // Check lobe bumps
+      // ── Step 2: Not on a node — shrink any hovered node back ──
+      if(App.hoveredNode){
+        const old=NODE_DATA[App.hoveredNode];
+        if(old) gsap.to(old.mesh.scale,{x:1,y:1,z:1,duration:.2});
+        App.hoveredNode=null;
+        App.hideNodeLabel();
+        document.body.classList.remove('pointer');
+      }
+
+      // ── Step 3: Check lobe bumps — show lobe tooltip only ──
       const bumpList=Object.values(LOBE_BUMPS);
-      const hits=App.raycaster.intersectObjects(bumpList);
-      if(hits.length>0){
-        const k=hits[0].object.userData.lobeKey;
+      const lHits=App.raycaster.intersectObjects(bumpList);
+
+      if(lHits.length>0){
+        const k=lHits[0].object.userData.lobeKey;
         if(App.hoveredLobe!==k){
-          if(App.hoveredLobe) gsap.to(LOBE_LIGHTS[App.hoveredLobe],{intensity:LOBES[App.hoveredLobe]._baseIntensity,duration:.3});
+          if(App.hoveredLobe) gsap.to(LOBE_BUMPS[App.hoveredLobe].material,{opacity:.22,duration:.3});
           App.hoveredLobe=k;
-          gsap.to(LOBE_BUMPS[k].material,{opacity:.5,duration:.25});
+          gsap.to(LOBE_BUMPS[k].material,{opacity:.45,duration:.25});
         }
+        // Show lobe tooltip, ensure node label is hidden
+        App.hideNodeLabel();
         App.showLobeTooltip(k,App.mouseScreen.x,App.mouseScreen.y);
         document.body.classList.add('pointer');
       } else {
+        // Nothing hovered — clear everything
         if(App.hoveredLobe){
           gsap.to(LOBE_BUMPS[App.hoveredLobe].material,{opacity:.22,duration:.3});
           App.hoveredLobe=null;
           document.body.classList.remove('pointer');
         }
         App.hideTooltip();
+        App.hideNodeLabel();
       }
     }
   }
@@ -2095,7 +2382,7 @@ window.closeMobileNav=closeMobileNav;
 // Adapt hint text for touch devices
 if('ontouchstart' in window || navigator.maxTouchPoints > 0){
   var hint = document.querySelector('#center-hint p');
-  if(hint) hint.textContent = 'Tap a lobe to explore  ·  Drag to rotate';
+  if(hint) hint.textContent = 'Tap a lobe  ·  Drag to rotate';
 }
 
 // Close mobile nav on canvas tap
@@ -2104,88 +2391,48 @@ document.getElementById('c').addEventListener('touchstart',closeMobileNav,{passi
 // ═══════════════════════════════════════════════════════════
 // ABOUT / CONTACT MODAL
 // ═══════════════════════════════════════════════════════════
-var Modal = {
-  currentTab: 'about',
-  open: function(tab) {
-    this.switchTab(tab || 'about');
-    if(typeof closeMobileNav==='function') closeMobileNav();
-    document.getElementById('modal-overlay').classList.add('open');
-  },
-  close: function() {
-    document.getElementById('modal-overlay').classList.remove('open');
-  },
-  switchTab: function(tab) {
-    this.currentTab = tab;
-    ['about','contact'].forEach(function(t) {
-      document.getElementById('tab-' + t).classList.toggle('active', t === tab);
-      document.getElementById('pane-' + t).classList.toggle('active', t === tab);
-    });
-  }
-};
-window.Modal = Modal;
-
-// Close modal on Escape
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') Modal.close();
-});
-
-
-
-// ── MOBILE NAV ────────────────────────────────────────────────────
-function toggleMobileNav(){
-  var nav=document.getElementById('mobile-nav');
-  var ham=document.getElementById('hamburger');
-  var isOpen=nav.classList.contains('open');
-  if(isOpen){ nav.classList.remove('open'); ham.classList.remove('open'); }
-  else       { nav.classList.add('open');   ham.classList.add('open');    }
-}
-function closeMobileNav(){
-  document.getElementById('mobile-nav').classList.remove('open');
-  document.getElementById('hamburger').classList.remove('open');
-}
-window.toggleMobileNav=toggleMobileNav;
-window.closeMobileNav=closeMobileNav;
-
-// Adapt hint text for touch devices
-if('ontouchstart' in window || navigator.maxTouchPoints > 0){
-  var hint = document.querySelector('#center-hint p');
-  if(hint) hint.textContent = 'Tap a lobe to explore  ·  Drag to rotate';
-}
 
 // Close mobile nav on canvas tap
 document.getElementById('c').addEventListener('touchstart',closeMobileNav,{passive:true});
 
-// ═══════════════════════════════════════════════════════════
-// ABOUT / CONTACT MODAL
-// ═══════════════════════════════════════════════════════════
-var Modal = {
-  currentTab: 'about',
-  open: function(tab) {
-    this.switchTab(tab || 'about');
-    document.getElementById('modal-overlay').classList.add('open');
-  },
-  close: function() {
-    document.getElementById('modal-overlay').classList.remove('open');
-  },
-  switchTab: function(tab) {
-    this.currentTab = tab;
-    ['about','contact'].forEach(function(t) {
-      document.getElementById('tab-' + t).classList.toggle('active', t === tab);
-      document.getElementById('pane-' + t).classList.toggle('active', t === tab);
-    });
-  }
-};
-window.Modal = Modal;
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') { Modal.close(); }
-});
-
-// Move modal-overlay to document.body so it's never blocked by #ui pointer-events:none
-document.addEventListener('DOMContentLoaded', function() {
+// Move modal-overlay to document.body immediately so it's never
+// blocked by #ui pointer-events:none on any device
+(function() {
   var mo = document.getElementById('modal-overlay');
   if (mo && mo.parentElement !== document.body) {
     document.body.appendChild(mo);
   }
+})();
+
+var Modal = {
+  currentTab: 'about',
+  open: function(tab) {
+    // Close mobile nav first so it doesn't sit on top
+    if (typeof closeMobileNav === 'function') closeMobileNav();
+    this.switchTab(tab || 'about');
+    var overlay = document.getElementById('modal-overlay');
+    // Ensure it's a direct child of body (z-index works correctly)
+    if (overlay.parentElement !== document.body) document.body.appendChild(overlay);
+    overlay.classList.add('open');
+    // Prevent body scroll while modal is open
+    document.body.style.overflow = 'hidden';
+  },
+  close: function() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  },
+  switchTab: function(tab) {
+    this.currentTab = tab;
+    ['about','contact'].forEach(function(t) {
+      document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+      document.getElementById('pane-' + t).classList.toggle('active', t === tab);
+    });
+  }
+};
+window.Modal = Modal;
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') { Modal.close(); }
 });
 
 // ═══════════════════════════════════════════════════════════
@@ -2304,6 +2551,87 @@ document.getElementById('chat-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') Chat.send();
 });
 
+// ── SKIP INTRO ────────────────────────────────────────────────
+function skipIntro(){
+  document.getElementById('skip-intro').classList.add('hidden');
+  App._skipFlag = true;
+
+  // Kill all in-progress GSAP animations so nothing bleeds through
+  gsap.killTweensOf(document.getElementById('typewriter'));
+  gsap.killTweensOf(faceGroup.scale);
+  gsap.killTweensOf(faceGroup.children);
+
+  // Instantly hide typewriter and face
+  const tw=document.getElementById('typewriter');
+  if(tw){ tw.style.opacity=0; tw.textContent=''; }
+  faceGroup.visible=false;
+
+  // Fade loading overlay
+  const ld=document.getElementById('loading');
+  ld.classList.add('fade');
+
+  // Show brain immediately
+  brainGroup.visible=true;
+  brainGroup.scale.set(1,1,1);
+  nodeGroup.visible=true;
+  NODE_MESHES.forEach(nd=>{
+    nd.mesh.material.opacity=0.75;
+    nd.mesh.scale.set(1,1,1);
+    nd.glow.material.opacity=0.25;
+    nd.pulse.material.opacity=0;
+  });
+  Object.entries(LOBE_LIGHTS).forEach(([k,pl])=>{pl.intensity=LOBES[k]._baseIntensity;});
+  Object.entries(LOBE_BUMPS).forEach(([k,b])=>{b.material.opacity=.22;});
+  gsap.to(camera.position,{x:0,y:1.5,z:10,duration:.5,ease:'power2.out'});
+  camLookAtTarget.set(0,0,0);
+  document.getElementById('ui').classList.add('show');
+  App.state='brain';
+  sessionStorage.setItem('vd_intro_seen','1');
+  const everSeen = localStorage.getItem('vd_onboard_done');
+  if(!everSeen) setTimeout(()=>Onboard.show(), 400);
+  else App._showWelcomeHint();
+  App.checkHash();
+}
+window.skipIntro = skipIntro;
+
+// ── ONBOARDING ────────────────────────────────────────────────
+var Onboard = {
+  step: 0,
+  totalSteps: 3,
+  show: function(){
+    document.getElementById('onboarding').classList.add('show');
+    this.step = 0;
+    this._update();
+  },
+  next: function(){
+    if(this.step < this.totalSteps-1){
+      this.step++;
+      this._update();
+    } else {
+      this.finish();
+    }
+  },
+  skip: function(){ this.finish(); },
+  finish: function(){
+    document.getElementById('onboarding').classList.remove('show');
+    localStorage.setItem('vd_onboard_done','1');
+    App._showWelcomeHint();
+  },
+  _update: function(){
+    for(var i=0;i<this.totalSteps;i++){
+      var s=document.getElementById('ob-step-'+i);
+      var d=document.getElementById('ob-dot-'+i);
+      if(s) s.classList.toggle('active', i===this.step);
+      if(d) d.classList.toggle('active', i===this.step);
+    }
+    var btn=document.getElementById('ob-next');
+    var skip=document.getElementById('ob-skip');
+    if(btn) btn.textContent = this.step===this.totalSteps-1 ? 'Explore ✦' : 'Next →';
+    if(skip) skip.style.display = this.step===this.totalSteps-1 ? 'none' : 'block';
+  }
+};
+window.Onboard = Onboard;
+
 // ═══════════════════════════════════════════════════════════
 // BACKGROUND MUSIC  -  procedural pentatonic synth (Web Audio API)
 // Auto-starts on first user interaction (browser policy)
@@ -2373,47 +2701,41 @@ function startMusic() {
   _playing = true;
   _mGain.gain.linearRampToValueAtTime(0.48, _actx.currentTime + 2.5);
   _musicTick();
-  document.getElementById('music-btn').innerHTML = '♬';
-  document.getElementById('music-btn').title = 'Mute music';
 }
 
 function toggleMusic() {
   if (!_actx) { startMusic(); return; }
-  var btn = document.getElementById('music-btn');
   var slash = document.getElementById('music-slash');
   var note  = document.getElementById('music-note');
   if (_playing) {
-    // MUTE — dark interior, slash appears, note dims
     _playing = false;
     if (_tickId) { clearTimeout(_tickId); _tickId = null; }
     _mGain.gain.cancelScheduledValues(_actx.currentTime);
     _mGain.gain.setValueAtTime(_mGain.gain.value, _actx.currentTime);
     _mGain.gain.linearRampToValueAtTime(0, _actx.currentTime + 0.6);
     if (slash) slash.style.display = 'block';
-    if (note)  note.style.opacity  = '0.2';
-    if (btn)   { btn.style.background = '#050510'; btn.style.border = '2px solid #ffffff'; btn.title = 'Play music'; }
+    if (note)  note.style.opacity  = '0.35';
   } else {
-    // UNMUTE — white interior, slash hidden, note bright
     _playing = true;
     _mGain.gain.cancelScheduledValues(_actx.currentTime);
     _mGain.gain.setValueAtTime(_mGain.gain.value, _actx.currentTime);
     _mGain.gain.linearRampToValueAtTime(0.48, _actx.currentTime + 0.6);
     if (slash) slash.style.display = 'none';
     if (note)  note.style.opacity  = '1';
-    if (btn)   { btn.style.background = '#ffffff'; btn.style.border = '2px solid #ffffff'; btn.title = 'Mute music'; }
     if (!_tickId) _musicTick();
   }
 }
 window.toggleMusic = toggleMusic;
 
-// Auto-start on first user interaction (required by browsers)
-['click', 'touchstart', 'keydown'].forEach(function(ev) {
-  document.addEventListener(ev, function h() {
+// Auto-start on first
+['click','touchstart','keydown'].forEach(function(ev){
+  document.addEventListener(ev, function startAudio(){
     startMusic();
-    document.removeEventListener(ev, h);
-  }, { once: true });
+    ['click','touchstart','keydown'].forEach(function(e2){
+      document.removeEventListener(e2, startAudio);
+    });
+  },{once:true});
 });
-
 </script>
 </body>
 </html>
